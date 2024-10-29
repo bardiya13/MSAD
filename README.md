@@ -1,4 +1,4 @@
-# MSAD
+# MSAD - A Benchmark for Video Anomaly Detection
 ![image-20241026003821228](https://gitee.com/zhu-liyun2000/typora_imgs/raw/master/img/202410260043576.png)
 
 This is a implementation of our work **"Advancing Video Anomaly Detection: A Concise Review and a New Dataset"** (Accepted by 2024 NeurIPS Dataset and Benchmark Track).  We provide code for our scene-adaptive method SA^2D and benchmarking our new Multi-Scenario Video Anomaly Detection dataset.
@@ -6,6 +6,8 @@ This is a implementation of our work **"Advancing Video Anomaly Detection: A Con
 
 
 We propose a new Multi-Scenario Anomaly Detection (MSAD) dataset, a high- resolution, real-world anomaly detection benchmark encompassing diverse scenarios and anomalies, both human and non-human-related. For more details and applying for our MSAD dataset, please refer to our project website: [Project Website](https://msad-dataset.github.io)
+
+
 
 
 
@@ -17,6 +19,8 @@ Please apply for the dataset and complete the [Online form](https://forms.micros
 
 
 
+
+
 ## Benchmarking on MSAD Dataset
 
 Method:
@@ -24,6 +28,8 @@ Method:
 - RTFM
 - MGFN (TODO)
 - UR-DMU (TODO)
+
+
 
 
 
