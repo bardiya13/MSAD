@@ -43,15 +43,12 @@ Method:
 If you find MSAD useful in your research, please consider citing our paper 📝
 
 ```markdown
-@misc{zhu2024advancing,
-      title={Advancing Video Anomaly Detection: A Concise Review and a New Dataset}, 
-      author={Liyun Zhu and Lei Wang and Arjun Raj and Tom Gedeon and Chen Chen},
-      year={2024},
-      eprint={2402.04857},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2402.04857}, 
-}
+@inproceedings{msad2024,
+    title = {Advancing Video Anomaly Detection: A Concise Review and a New Dataset},
+    author = {Liyun Zhu and Lei Wang and Arjun Raj and Tom Gedeon and Chen Chen},
+    booktitle = {The Thirty-eight Conference on Neural Information Processing Systems Datasets and Benchmarks Track},
+    year = {2024}
+} 
 ```
 
 
