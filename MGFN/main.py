@@ -2,7 +2,6 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 import torch
 from utils.utils import save_best_record
-
 from tqdm import tqdm
 from torch.multiprocessing import set_start_method
 # from tensorboardX import SummaryWriter
@@ -10,20 +9,21 @@ import option
 args=option.parse_args()
 from config import *
 from models.mgfn import mgfn
-from datasets.dataset import Dataset
+from dataset import Dataset
 from train import train
 from test import test
-import datetime
+
 
 def save_config(save_path):
     path = save_path+'/'
     os.makedirs(path,exist_ok=True)
-    f = open(path + "config_{}.txt".format(datetime.datetime.now()), 'w')
+    f = open(path + "config.txt", 'w')
     for key in vars(args).keys():
         f.write('{}: {}'.format(key,vars(args)[key]))
         f.write('\n')
-savepath = './ckpt/{}_{}_{}_{}_{}_{}'.format(args.datasetname, args.feat_extractor, args.lr, args.batch_size,args.mag_ratio,
+savepath = './ckpt/{}_{}_{}_{}_{}'.format(args.datasetname, args.feat_extractor, args.batch_size,args.mag_ratio,
                                               args.comment)
+savepath.replace("*", "_")
 
 save_config(savepath)
 # log_writer = SummaryWriter(savepath)
@@ -64,10 +64,7 @@ if __name__ == '__main__':
     test_info = {"epoch": [], "test_AUC": [], "test_PR":[]}
 
     best_AUC = -1
-    best_PR = -1 # put your own path here
-
-    for name, value in model.named_parameters():
-        print(name)
+    best_PR = -1 
     iterator = 0
     for step in tqdm(
             range(1, args.max_epoch + 1),

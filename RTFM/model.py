@@ -200,7 +200,7 @@ class Model(nn.Module):
     #         x = video.permute(0, 2, 1)
 
     def forward(self, inputs):
-        print(inputs.size())
+        # print(inputs.size())
 
         k_abn = 2
         k_nor = 2
@@ -288,7 +288,7 @@ class Model(nn.Module):
         idx_abn_feat = idx_abn.unsqueeze(2).expand([-1, -1, abnormal_features.shape[2]])
 
         abnormal_features = abnormal_features.view(n_size, ncrops, t, f)
-        abnormal_features = abnormal_features.permute(1, 0, 2,3)
+        abnormal_features = abnormal_features.permute(1, 0, 2, 3)
 
         total_select_abn_feature = torch.zeros(0, device=inputs.device)
         for abnormal_feature in abnormal_features:

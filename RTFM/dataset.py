@@ -13,9 +13,9 @@ class Dataset(data.Dataset):
         self.dataset = args.dataset
         if self.dataset == 'shanghai':
             if test_mode:
-                self.rgb_list_file = '/scratch/kf09/lz1278/RTFM/list/shanghai-i3d-test-10crop.list'
+                self.rgb_list_file = './list/shanghai-i3d-test-10crop.list'
             else:
-                self.rgb_list_file = '/scratch/kf09/lz1278/RTFM/list/shanghai-i3d-train-10crop.list'
+                self.rgb_list_file = './list/shanghai-i3d-train-10crop.list'
         
         if self.dataset == 'ped2':
             if test_mode:
@@ -54,42 +54,42 @@ class Dataset(data.Dataset):
             if self.dataset == 'shanghai':
                 if self.is_normal:
                     self.list = self.list[63:]
-                    print('normal list for shanghai tech')
-                    print(self.list)
+                    # print('normal list for shanghai tech')
+                    # print(self.list)
                 else:
                     self.list = self.list[:63]
-                    print('abnormal list for shanghai tech')
-                    print(self.list)
+                    # print('abnormal list for shanghai tech')
+                    # print(self.list)
 
             elif self.dataset == 'ucf':
                 if self.is_normal:
                     self.list = self.list[810:]
-                    print('normal list for ucf')
-                    print(self.list)
+                    # print('normal list for ucf')
+                    # print(self.list)
                 else:
                     self.list = self.list[:810]
-                    print('abnormal list for ucf')
-                    print(self.list)
+                    # print('abnormal list for ucf')
+                    # print(self.list)
 
             elif self.dataset == 'msad':
                 if self.is_normal:
                     self.list = self.list[120:]
-                    print('normal list for msad')
-                    print(self.list)
+                    # print('normal list for msad')
+                    # print(self.list)
                 else:
                     self.list = self.list[:120]
-                    print('abnormal list for msad')
-                    print(self.list)
+                    # print('abnormal list for msad')
+                    # print(self.list)
             
             elif self.dataset == 'ped2':
                 if self.is_normal:
                     self.list = self.list[6:]
-                    print('normal list for ucf')
-                    print(self.list)
+                    # print('normal list for ucf')
+                    # print(self.list)
                 else:
                     self.list = self.list[:6]
-                    print('abnormal list for ucf')
-                    print(self.list)
+                    # print('abnormal list for ucf')
+                    # print(self.list)
 
     def __getitem__(self, index):
 

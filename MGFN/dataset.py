@@ -27,42 +27,42 @@ class Dataset(data.Dataset):
             if args.datasetname == 'UCF':
                 if self.is_normal:
                     self.list = self.list[810:]#ucf 810; sht63; xd 9525
-                    print('normal list')
-                    print(self.list)
+                    # print('normal list')
+                    # print(self.list)
                 else:
                     self.list = self.list[:810]#ucf 810; sht 63; 9525
-                    print('abnormal list')
-                    print(self.list)
+                    # print('abnormal list')
+                    # print(self.list)
 
             if args.datasetname == 'MSAD':
                 if self.is_normal:
                     self.list = self.list[120:]
-                    print('normal list')
-                    print(self.list)
+                    # print('normal list')
+                    # print(self.list)
                 else:
                     self.list = self.list[:120]
-                    print('abnormal list')
-                    print(self.list)
+                    # print('abnormal list')
+                    # print(self.list)
             
             elif args.datasetname == 'XD':
                 if self.is_normal:
                     self.list = self.list[9525:]
-                    print('normal list')
-                    print(self.list)
+                    # print('normal list')
+                    # print(self.list)
                 else:
                     self.list = self.list[:9525]
-                    print('abnormal list')
-                    print(self.list)
+                    # print('abnormal list')
+                    # print(self.list)
             
             elif args.datasetname == 'SH':
                 if self.is_normal:
                     self.list = self.list[63:]
-                    print('normal list')
-                    print(self.list)
+                    # print('normal list')
+                    # print(self.list)
                 else:
                     self.list = self.list[:63]
-                    print('abnormal list')
-                    print(self.list)
+                    # print('abnormal list')
+                    # print(self.list)
 
 
 

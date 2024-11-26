@@ -17,22 +17,10 @@ if __name__ == '__main__':
     args = option.parser.parse_args()
     config = Config(args)
     dataset = Dataset(args, test_mode=False, is_normal=True)
-    print(dataset[0][0].shape)
-    print(dataset[1][0].shape)
-    print(dataset[2][0].shape)
-    print(dataset[3][0].shape)
-    print(len(dataset))
 
     train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
                                batch_size=args.batch_size, shuffle=True,
                                num_workers=0, pin_memory=False, drop_last=True)
-    print(train_nloader)
-    print(len(train_nloader))
-
-    # data_iter = iter(train_nloader)
-    for batch_idx, data in enumerate(train_nloader):
-        print(f"Batch {batch_idx}: {data}")
-
     train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
                                batch_size=args.batch_size, shuffle=True,
                                num_workers=0, pin_memory=False, drop_last=True)
@@ -42,8 +30,6 @@ if __name__ == '__main__':
 
     model = Model(args.feature_size, args.batch_size)
 
-    for name, value in model.named_parameters():
-        print(name)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
 

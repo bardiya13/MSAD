@@ -41,23 +41,20 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ucf':
             gt = np.load('list/gt-ucf.npy')
         if args.dataset == 'msad':
-            gt = np.load('/scratch/kf09/lz1278/MSAD-Swin-WS/gt-MSAD-WS-new.npy')
+            gt = np.load('list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
-            gt = np.load('/scratch/kf09/lz1278/cuhk_i3d_feature/gt-cuhk.npy')
+            gt = np.load('list/gt-cuhk.npy')
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
 
         fpr, tpr, threshold = roc_curve(list(gt), pred)
-        np.save('fpr.npy', fpr)
-        np.save('tpr.npy', tpr)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
 
         precision, recall, th = precision_recall_curve(list(gt), pred)
         pr_auc = auc(recall, precision)
-        np.save('precision.npy', precision)
-        np.save('recall.npy', recall)
+        # print('pr_auc : ' + str(rec_auc))
         # viz.plot_lines('pr_auc', pr_auc)
         # viz.plot_lines('auc', rec_auc)
         # viz.lines('scores', pred)

@@ -31,10 +31,10 @@ module load python3/3.10.0
 #     | tee ./test_logs_msad_to_ped2.txt
 
 
-python3 test.py 2>&1 --test-rgb-list 'list/cuhk-i3d-test.list' \
-    --gt '/scratch/kf09/lz1278/cuhk_i3d_feature/gt-cuhk.npy'   \
-    --testing-model 'ckpt/ucf-i3d0.8346095811174203-1080.pkl' \
-    --dataset 'cuhk' \
-    | tee ./test_logs_ucf_to_cuhk.txt
+python3 test.py 2>&1 --test-rgb-list 'list/msad-i3d-test.list' \
+    --gt './list/gt-MSAD-WS-new.npy'   \
+    --testing-model './ckpt/rtfm-msad-i3dfinal.pkl' \
+    --dataset 'msad' \
+    | tee ./test_logs.txt
 
-
+python3 test.py 2>&1 --test-rgb-list 'list/msad-i3d-test.list' --gt './list/gt-MSAD-WS-new.npy' --testing-model './ckpt/rtfm-msad-i3dfinal.pkl' --dataset 'msad' | tee ./test_logs.txt

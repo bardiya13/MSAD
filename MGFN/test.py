@@ -7,8 +7,7 @@ from tqdm import tqdm
 args=option.parse_args()
 from config import *
 from models.mgfn import mgfn as Model
-from datasets.dataset import Dataset
-
+from dataset import Dataset
 
 def test(dataloader, model, args, device):
     plt.clf()

@@ -9,14 +9,11 @@ We propose a new **Multi-Scenario Anomaly Detection (MSAD) dataset**, a high- re
 
 
 
-
-
 ## Dataset Preparation
 
 If you would like to access the original dataset in video format, please submit a request through our online application form [here](https://forms.microsoft.com/pages/responsepage.aspx?id=XHJ941yrJEaa5fBTPkhkN0_bcDHlPvFAiLdm3BQe86NURVI5RlRWODhYWVZYSzNCSlBROThBTEQzOC4u&route=shorturl).
 
-We also offer extracted features (I3D and Video-Swin Transformer) available for all researchers. 
-[Feature_download](https://anu365.sharepoint.com/:f:/s/msad-dataset/ElG2Uers-Y5GilV-JDHPc6UBaOcGK_vLk3VPzCIN8Oe4KA?e=cHddTR) (Next expiry date: 29 Nov 2024, due to institutional limitations)
+We use this [I3D_Feature_Extraction_resnet](https://github.com/GowthamGottimukkala/I3D_Feature_Extraction_resnet) repo for extracting I3D features. We also offer extracted features (I3D and Video-Swin Transformer) available for all researchers. [(Feature_Download Link)](https://drive.google.com/drive/folders/1mxFGCcAuEecN0c7MHD12wD4pO2Ej5kLe)
 
 **Note that the Dataset is to be used solely for academic and research purposes. Commercial use, reproduction, distribution, or sale of the Dataset or any derivative works is strictly prohibited.**
 
@@ -26,17 +23,58 @@ We also offer extracted features (I3D and Video-Swin Transformer) available for 
 
 ## Benchmarking on MSAD Dataset
 
-For benchmarking weakly-supervised methods on our MSAD dataset, we follow **Evaluation Protocol ii** as described in our paper. Training and testing file list can be found in [feature download](https://anu365.sharepoint.com/:f:/s/msad-dataset/ElG2Uers-Y5GilV-JDHPc6UBaOcGK_vLk3VPzCIN8Oe4KA?e=cHddTR) link.
+For benchmarking weakly-supervised methods on our MSAD dataset, we follow **Evaluation Protocol ii** as described in our paper. Training and testing file list can be found in [feature_download](https://drive.google.com/drive/folders/1mxFGCcAuEecN0c7MHD12wD4pO2Ej5kLe) link. We have also provide the pretrained checkpoints for several methods in the link. 
 
-**Protocal ii:** Train on 360 normal and 120 abnormal videos, and test on 120 normal and 120 abnormal videos. During training, we only provide video-level annotations. This protocol is suitable for evaluating weakly-supervised methods trained with our video-level annotations.
+We have designed two protocol in our work. This GitHub repo only supports Protocol ii.
 
-Our MSAD dataset supports benchmarking with the following weakly-supervised methods:
+**Protocol ii:** Train on 360 normal and 120 abnormal videos, and test on 120 normal and 120 abnormal videos. During training, we only provide video-level annotations. This protocol is suitable for evaluating weakly-supervised methods trained with our video-level annotations. 
+
+If you want to test the model, you can download our pre-trained model from [here](https://drive.google.com/drive/folders/1mxFGCcAuEecN0c7MHD12wD4pO2Ej5kLe). Our MSAD dataset supports benchmarking with the following weakly-supervised methods:
 
 - RTFM
 - MGFN
 - UR-DMU (TODO)
 
 
+
+### RTFM
+
+An example for testing the model is shown below, you can modify arguments for different datasets (e.g. MSAD, UCF-Crime, ShanghaiTech, etc).
+
+```shell
+cd RTFM
+python test.py --test-rgb-list 'list/msad-i3d-test.list' \
+	--gt './list/gt-MSAD-WS-new.npy'   \
+    --testing-model './ckpt/rtfm-msad-i3dfinal.pkl' \
+    --dataset 'msad' 
+```
+
+Here is an example for training the model:
+
+```shell
+python main.py --feat-extractor 'i3d'\ 
+	--feature-size 2048 --rgb-list 'list/msad-i3d.list' \
+	--test-rgb-list 'list/msad-i3d-test.list' --gt default='list/gt-MSAD-WS-new.npy' \
+	--dataset 'msad' 2>&1 | tee ./train_logs_i3d_msad.txt
+```
+
+
+
+### MGFN
+
+```shell
+cd MGFN
+python test.py --testing-model ./ckpt/mgfn-msad-i3d-84.96.pkl  
+```
+
+For training the model, just run the following code:
+
+```shell
+cd MGFN
+python main.py 
+```
+
+You can check the relevant arguments in `option.py` and adjust them accordingly.
 
 
 

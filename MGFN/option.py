@@ -6,13 +6,11 @@ def parse_args():
     parser.add_argument('--feat_extractor', default='i3d', choices=['i3d', 'c3d', 'swin'])
     parser.add_argument('--feature_size', type=int, default=2048, help='size of feature (default: UCF:2048//xd:1024)')
     parser.add_argument('--hiddensize', type=int, default=512, help='size of feature (default: 512)')
-    parser.add_argument('--modality', default='RGB', help='the type of the input, RGB,AUDIO, or MIX')
-    parser.add_argument('--rgb-list', default='/scratch/kf09/lz1278/MGFN/data/msad/msad-i3d.list', help='list of rgb features ')
-    parser.add_argument('--test-rgb-list', default='/scratch/kf09/lz1278/MGFN/data/msad/msad-i3d-test-new.list', help='list of test rgb features')
-    parser.add_argument('--gt', default='/scratch/kf09/lz1278/MSAD-Swin-WS/gt-MSAD-WS-new.npy', help='file of ground truth ')
-
+    parser.add_argument('--modality', default='RGB', help='the type of the input, RGB, AUDIO, or MIX')
+    parser.add_argument('--rgb-list', default='./data/msad/msad-i3d.list', help='list of rgb features ')
+    parser.add_argument('--test-rgb-list', default='./data/msad/msad-i3d-test.list', help='list of test rgb features')
+    parser.add_argument('--gt', default='./data/msad/gt-MSAD-WS.npy', help='file of ground truth ')
     parser.add_argument('--mag_ratio', type=float, default=0.1, help='mag ratio')
-
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
 
@@ -29,17 +27,10 @@ def parse_args():
     parser.add_argument('--mgfn_type2', default='fb', help='mgfn_types2')
     parser.add_argument('--mgfn_type3', default='fb', help='mgfn_types3')
 
-    #dropout rate
     parser.add_argument('--dropout_rate', type=float, default=0.2, help='dropout rate')
-
-
     parser.add_argument('--gpus', type=str, default='0', help='gpus')
     parser.add_argument('--lr', type=str, default='[0.001]*15000', help='learning rates for steps(list form) default:0.001')
-
-
     parser.add_argument('--batch_size', type=int, default=16, help='number of instances in a batch of data (default: 16)')
-
-
     parser.add_argument('--workers', default=0, help='number of workers in dataloader')
     parser.add_argument('--model-name', default='mgfn', help='name to save model')
     parser.add_argument('--pretrained_ckpt', default= None, help='ckpt for pretrained model')
@@ -48,9 +39,6 @@ def parse_args():
     parser.add_argument('--preprocessed', action = 'store_true', help='if train set is already segmented')
     parser.add_argument('--plot-freq', type=int, default=10, help='frequency of plotting (default: 10)')
     parser.add_argument('--max-epoch', type=int, default=3000, help='maximum iteration to train (default: 100)')
-
-
-
     parser.add_argument('--testing-model', default=None, help='The model used for testing.')
 
     args = parser.parse_args()
