@@ -34,6 +34,7 @@ except RuntimeError:
 
 
 if __name__ == '__main__':
+    print("BARDIA TEST")
     args=option.parse_args()
     config = Config(args)
     train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
