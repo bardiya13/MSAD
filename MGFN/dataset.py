@@ -20,83 +20,95 @@ class Dataset(data.Dataset):
         self.num_frame = 0
         self.labels = None
         self.is_preprocessed = args.preprocessed
+#######################
+        print(f"Dataset initialized with: is_normal={is_normal}, test_mode={test_mode}")
         print("SIZE:", len(self.list))
         for index in range(len(self.list)):
-            print(index, self.list[index].strip("\n"))
-
+            print(f"File {index}: {self.list[index].strip()}")
+##################################
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))
         if self.test_mode is False:
             if args.datasetname == 'UCF':
                 if self.is_normal:
                     self.list = self.list[810:]#ucf 810; sht63; xd 9525
-                    # print('normal list')
-                    # print(self.list)
+                    print('normal list')
+                    print(self.list)
                 else:
                     self.list = self.list[:810]#ucf 810; sht 63; 9525
-                    # print('abnormal list')
-                    # print(self.list)
+                    print('abnormal list')
+                    print(self.list)
 
             if args.datasetname == 'MSAD':
                 if self.is_normal:
                     self.list = self.list[120:]
-                    # print('normal list')
-                    # print(self.list)
+                    print('normal list')
+                    print(self.list)
                 else:
                     self.list = self.list[:120]
-                    # print('abnormal list')
-                    # print(self.list)
+                    print('abnormal list')
+                    print(self.list)
             
             elif args.datasetname == 'XD':
                 if self.is_normal:
                     self.list = self.list[9525:]
-                    # print('normal list')
-                    # print(self.list)
+                    print('normal list')
+                    print(self.list)
                 else:
                     self.list = self.list[:9525]
-                    # print('abnormal list')
-                    # print(self.list)
+                    print('abnormal list')
+                    print(self.list)
             
             elif args.datasetname == 'SH':
                 if self.is_normal:
                     self.list = self.list[63:]
-                    # print('normal list')
-                    # print(self.list)
+                    print('normal list')
+                    print(self.list)
                 else:
                     self.list = self.list[:63]
-                    # print('abnormal list')
-                    # print(self.list)
+                    print('abnormal list')
+                    print(self.list)
 
 
 
     def __getitem__(self, index):
+        ########################
+        label = self.get_label(index)
+        print(f"\nProcessing item {index} with label {label}")
+        ########################
         label = self.get_label(index)  # get video level label 0/1
         if args.datasetname == 'UCF':
             features = np.load(self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
+            print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
         elif args.datasetname == 'XD':
             features = np.load(self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
+            print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'MSAD' or args.datasetname == 'CUHK':
             features = np.load(self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
+            print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'Ped2':
             features = np.load(self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
+            print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'SH':
             features = np.load(self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
+            print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
         
         if self.tranform is not None:
             features = self.tranform(features)
+            print(f"After transformation shape: {features.shape}")
         if self.test_mode:
             if args.datasetname == 'UCF':
                 # ------------ I3D --------------
@@ -106,11 +118,13 @@ class Dataset(data.Dataset):
                 # ------------ Swin ------------ 
                 mag = np.linalg.norm(features, axis=1)[:, np.newaxis]
                 features = np.concatenate((features, mag), axis=1)
+                print(f"Test mode - Final features shape: {features.shape}")
 
             elif args.datasetname == 'MSAD' or args.datasetname == 'CUHK':
                 # ------------ I3D --------------
                 mag = np.linalg.norm(features, axis=2)[:,:, np.newaxis]
                 features = np.concatenate((features,mag),axis = 2)
+                print(f"Test mode - Final features shape: {features.shape}")
 
                 # ------------ Swin ------------ 
                 # mag = np.linalg.norm(features, axis=1)[:, np.newaxis]
@@ -119,16 +133,20 @@ class Dataset(data.Dataset):
             elif args.datasetname == 'XD':
                 mag = np.linalg.norm(features, axis=1)[:, np.newaxis]
                 features = np.concatenate((features, mag), axis=1)
+                print(f"Test mode - Final features shape: {features.shape}")
             elif args.datasetname == 'Ped2':
                 mag = np.linalg.norm(features, axis=1)[:, np.newaxis]
                 features = np.concatenate((features, mag), axis=1)
+                print(f"Test mode - Final features shape: {features.shape}")
             elif args.datasetname == 'SH':
                 mag = np.linalg.norm(features, axis=2)[:,:, np.newaxis]
                 features = np.concatenate((features, mag), axis=2)
+                print(f"Test mode - Final features shape: {features.shape}")
             return features, name
         else:
             if args.datasetname == 'UCF':
                 if self.is_preprocessed:
+                    print(f"Preprocessed features shape: {features.shape}")
                     return features, label
                 # ------------------------ for I3D ------------------------------
                 # features = features.transpose(1, 0, 2)  # [10, T, F]
@@ -147,26 +165,32 @@ class Dataset(data.Dataset):
                 # ------------------------ for Swin --------------------------------
 
                 feature = process_feat(features, 32)
+                print(f"After process_feat shape: {feature.shape}")
                 # if args.add_mag_info == True:
                 feature_mag = np.linalg.norm(feature, axis=1)[:, np.newaxis]
                 feature = np.concatenate((feature,feature_mag),axis = 1)
+                print(f"Final features shape (with magnitude): {feature.shape}")
                 return feature, label
 
             if args.datasetname == 'MSAD':
                 if self.is_preprocessed:
+                    print(f"Preprocessed features shape: {features.shape}")
                     return features, label
                 # ------------------------ for I3D ------------------------------
                 features = features.transpose(1, 0, 2)  # [10, T, F]
+                print(f"After transpose shape: {features.shape}")
                 divided_features = []
 
                 divided_mag = []
                 for feature in features:
                     feature = process_feat(feature, args.seg_length) #ucf(32,2048)
+                    print(f"  Sub-feature {i} after process_feat shape: {feature.shape}")
                     divided_features.append(feature)
                     divided_mag.append(np.linalg.norm(feature, axis=1)[:, np.newaxis])
                 divided_features = np.array(divided_features, dtype=np.float32)
                 divided_mag = np.array(divided_mag, dtype=np.float32)
                 divided_features = np.concatenate((divided_features,divided_mag),axis = 2)
+                print(f"Final divided features shape: {divided_features.shape}")
                 return divided_features, label
 
                 # ------------------------ for Swin --------------------------------
@@ -188,18 +212,22 @@ class Dataset(data.Dataset):
 
             if args.datasetname == 'SH':
                 if self.is_preprocessed:
+                    print(f"Preprocessed features shape: {features.shape}")
                     return features, label
                 features = features.transpose(1, 0, 2)  # [10, T, F]
+                print(f"After transpose shape: {features.shape}")
                 divided_features = []
 
                 divided_mag = []
                 for feature in features:
-                    feature = process_feat(feature, args.seg_length) 
+                    feature = process_feat(feature, args.seg_length)
+                    print(f"  Sub-feature {i} after process_feat shape: {feature.shape}")
                     divided_features.append(feature)
                     divided_mag.append(np.linalg.norm(feature, axis=1)[:, np.newaxis])
                 divided_features = np.array(divided_features, dtype=np.float32)
                 divided_mag = np.array(divided_mag, dtype=np.float32)
                 divided_features = np.concatenate((divided_features,divided_mag),axis = 2)
+                print(f"Final divided features shape: {divided_features.shape}")
                 return divided_features, label
 
 
