@@ -21,7 +21,7 @@ class Dataset(data.Dataset):
         self.labels = None
         self.is_preprocessed = args.preprocessed
         print("SIZE:", len(self.list))
-        for index in range(self.list):
+        for index in range(len(self.list)):
             print(index, self.list[index].strip("\n"))
 
     def _parse_list(self):
