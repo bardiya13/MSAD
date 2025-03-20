@@ -20,6 +20,9 @@ class Dataset(data.Dataset):
         self.num_frame = 0
         self.labels = None
         self.is_preprocessed = args.preprocessed
+        print("SIZE:", len(self.list))
+        for index in range(self.list):
+            print(index, self.list[index].strip("\n"))
 
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))

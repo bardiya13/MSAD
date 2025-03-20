@@ -54,3 +54,5 @@ if __name__ == '__main__':
     model = model.to(device)
     model_dict = model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(args.testing_model).items()})
     auc = test(test_loader, model, args, device)
+
+# ssh-add ~/.ssh/id_ed25519
