@@ -8,12 +8,14 @@ args=option.parse_args()
 
 class Dataset(data.Dataset):
     def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False):
-        self.modality = args.modality
+        self.modality = args.modality#type of data
         self.is_normal = is_normal
+        self.labels_folder = args.labels_folder  # New parameter
+        self.features_folder = args.features_folder  # New parameter
         if test_mode:
-            self.rgb_list_file = args.test_rgb_list
+            self.features_list_file = args.test_features_list  # New parameter instead of args.test_rgb_list
         else:
-            self.rgb_list_file = args.rgb_list
+            self.features_list_file = args.train_features_list
         self.tranform = transform
         self.test_mode = test_mode
         self._parse_list()
@@ -21,23 +23,18 @@ class Dataset(data.Dataset):
         self.labels = None
         self.is_preprocessed = args.preprocessed
 #######################
-        print(f"Dataset initialized with: is_normal={is_normal}, test_mode={test_mode}")
-        print("SIZE:", len(self.list))
-        for index in range(len(self.list)):
-            print(f"File {index}: {self.list[index].strip()}")
+
 ##################################
     def _parse_list(self):
-        self.list = list(open(self.rgb_list_file))
+        self.list = list(open(self.rgb_list_file))#
         if self.test_mode is False:
             if args.datasetname == 'UCF':
                 if self.is_normal:
                     self.list = self.list[810:]#ucf 810; sht63; xd 9525
-                    print('normal list')
-                    print(self.list)
+
                 else:
                     self.list = self.list[:810]#ucf 810; sht 63; 9525
-                    print('abnormal list')
-                    print(self.list)
+
 
             if args.datasetname == 'MSAD':
                 if self.is_normal:
@@ -60,12 +57,12 @@ class Dataset(data.Dataset):
                     print(self.list)
             
             elif args.datasetname == 'SH':
-                if self.is_normal:
+                if self.is_normal:#for normal data
                     self.list = self.list[63:]
                     print('normal list')
                     print(self.list)
                 else:
-                    self.list = self.list[:63]
+                    self.list = self.list[:63]#for abnormal data
                     print('abnormal list')
                     print(self.list)
 
@@ -227,7 +224,7 @@ class Dataset(data.Dataset):
                 divided_features = np.array(divided_features, dtype=np.float32)
                 divided_mag = np.array(divided_mag, dtype=np.float32)
                 divided_features = np.concatenate((divided_features,divided_mag),axis = 2)
-                print(f"Final divided features shape: {divided_features.shape}")
+
                 return divided_features, label
 
 
