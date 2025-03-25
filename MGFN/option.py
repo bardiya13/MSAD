@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
     parser.add_argument('--test_feature_address', type=str, default="/kaggle/input/test-feaucher", help='where did you store your test features?')
-    parser.add_argument('--train_feature_address', type=str, default="/kaggle/working/train_feau/output_train 2", help='where did you store your train features?')
+    parser.add_argument('--train_feature_address', type=str, default="/kaggle/input/train-feauter", help='where did you store your train features?')
     parser.add_argument('--test_label_address', type=str, default="/kaggle/input/test-label", help='where did you store your test labels?')
     parser.add_argument('--train_label_address', type=str, default="/kaggle/input/train-label", help='where did you store your train labels?')
 

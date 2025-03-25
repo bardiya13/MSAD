@@ -27,7 +27,7 @@ def test(dataloader, model, args, device):
             logits = torch.squeeze(logits, 1)
             logits = torch.mean(logits, 0)
             sig = logits
-            print(sig.shape[0]*16)
+            # print(sig.shape[0]*16)
             featurelen.append(len(sig))
             pred = torch.cat((pred, sig))
 
@@ -50,11 +50,8 @@ if __name__ == '__main__':
     model = Model()
 
     shangatic = False
-    label_dir= None
     if args.datasetname == "SH":
         shangatic = True
-
-        label_dir = "/kaggle/input/test-label"
 
     test_loader = DataLoader(Dataset(args, test_mode=True, shangatic=shangatic),
                              batch_size=1, shuffle=False,
