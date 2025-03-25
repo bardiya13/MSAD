@@ -216,7 +216,7 @@ class Dataset(data.Dataset):
         if self.shangatic:
             # Load the label file for the current frame
 
-            label_path = os.path.join(self.label_dir, f"{self.rgb_list_file[index]}.npy")
+            label_path = os.path.join(self.label_dir, f"{self.list[index]}.npy")
 
             # Load the numpy array
             label_array = np.load(label_path)
