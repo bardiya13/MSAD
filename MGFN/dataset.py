@@ -4,7 +4,7 @@ import torch.utils.data as data
 import numpy as np
 from utils.utils import process_feat
 import torch
-
+import os
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 import option
