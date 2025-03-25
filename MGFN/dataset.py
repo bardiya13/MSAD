@@ -15,6 +15,30 @@ class Dataset(data.Dataset):
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
+        self.label_dir = os.path.join(args.dataset_path, 'labels')#############
+
+            # ... existing code ...
+
+            # Path to the directory containing label files
+
+
+            # Initialize frame indices from a text file
+        self.frame_indices = []
+
+            # Path to the text file containing frame names
+        frames_list_file = os.path.join(args.dataset_path, 'frame_list.txt')  # Update this path as needed
+
+            # Read frame names from the text file
+        if os.path.exists(frames_list_file):
+            with open(frames_list_file, 'r') as f:
+                for line in f:
+                        # Strip whitespace and newline characters
+                    frame_idx = line.strip()
+                    if frame_idx:  # Only add non-empty lines
+                        self.frame_indices.append(frame_idx)
+        else:
+            raise FileNotFoundError(f"Frame list file not found at {frames_list_file}")
+
         if test_mode:
             self.rgb_list_file = args.test_rgb_list
         else:
