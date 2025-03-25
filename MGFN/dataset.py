@@ -204,7 +204,7 @@ class Dataset(data.Dataset):
             elif args.datasetname == "shangatic":
                 if self.is_preprocessed:
                     return features, label
-        # TODO: fill
+
 
 
     def get_label(self, index):
