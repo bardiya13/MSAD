@@ -13,6 +13,8 @@ def parse_args():
     parser.add_argument('--mag_ratio', type=float, default=0.1, help='mag ratio')
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
+    parser.add_argument('--test_feature_address', type=str, default="/kaggle/working/test_feau/output_copy_test", help='where did you store your test features?')
+    parser.add_argument('--train_feature_address', type=str, default="/kaggle/working/train_feau/output_train 2", help='where did you store your train features?')
 
     parser.add_argument('--seg_length', type=int, default=32, help='default:32')
     parser.add_argument('--local_con', default='static', help='dynamic/static')

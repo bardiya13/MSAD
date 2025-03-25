@@ -1,4 +1,3 @@
-
 #######################
 import torch.utils.data as data
 import numpy as np
@@ -8,18 +7,23 @@ import os
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 import option
+
 args = option.parse_args()
 
+
 class Dataset(data.Dataset):
-    def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False, shangatic=False, label_dir=None):
+    def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False, shangatic=False,
+                 label_dir=None):
 
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
-
+        if test_mode:
+            self.feature_address = args.test_feature_address
+        else:
+            self.feature_address = args.train_feature_address
         if shangatic:
             self.label_dir = label_dir
-
 
         if test_mode:
             self.rgb_list_file = args.test_rgb_list
@@ -99,7 +103,7 @@ class Dataset(data.Dataset):
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'SH':
-            features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+            features = np.load(self.feature_address, self.list[index].strip('\n'), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
@@ -209,8 +213,6 @@ class Dataset(data.Dataset):
                 divided_mag = np.array(divided_mag, dtype=np.float32)
                 divided_features = np.concatenate((divided_features, divided_mag), axis=2)
                 return divided_features, label
-
-
 
     def get_label(self, index):
         if self.shangatic:
