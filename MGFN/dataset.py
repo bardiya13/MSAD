@@ -105,6 +105,7 @@ class Dataset(data.Dataset):
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'SH':
+
             features = np.load(os.path.join(self.feature_address, self.list[index].strip('\n')+".npy"), allow_pickle=True)
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
