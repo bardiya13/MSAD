@@ -1,0 +1,88 @@
+import torch.utils.data as data
+import numpy as np
+from utils.utils import process_feat
+import torch
+torch.set_default_tensor_type('torch.cuda.FloatTensor')  # Setting default tensor type to CUDA for GPU acceleration
+import option
+args = option.parse_args()  # Parse command line arguments for configuration
+
+class Dataset(data.Dataset):
+    """
+    Custom dataset class for loading and preprocessing video features for anomaly detection.
+    Handles multiple datasets (UCF, MSAD, XD, SH, etc.) and different feature extraction methods.
+    """
+    def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False):
+        """
+        Initialize dataset parameters.
+
+        Args:
+            args: Command line arguments containing dataset configuration
+            is_normal: Boolean flag indicating whether to load normal (True) or abnormal (False) data
+            transform: Optional transformations to apply to features
+            test_mode: Boolean flag for test/train mode
+            is_preprocessed: Boolean flag indicating if features are already preprocessed
+        """
+        self.modality = args.modality  # Type of data (RGB, optical flow, etc.)
+        self.is_normal = is_normal  # Flag for normal vs abnormal data
+        self.labels_folder = args.labels_folder  # Path to labels directory
+        self.features_folder = args.features_folder  # Path to features directory
+
+        # Select appropriate features list file based on test or train mode
+        if test_mode:
+            self.features_list_file = args.test_features_list  # Features list for testing
+        else:
+            self.features_list_file = args.train_features_list  # Features list for training
+
+        self.tranform = transform  # Optional transformations
+        self.test_mode = test_mode  # Flag for test mode
+        self._parse_list()  # Parse the list of video features
+        self.num_frame = 0  # Initialize frame counter
+        self.labels = None  # Initialize labels
+        self.is_preprocessed = args.preprocessed  # Flag for preprocessed features
+#######################
+
+##################################
+    def _parse_list(self):
+        """
+        Parse the list of video features and split into normal/abnormal subsets
+        based on the dataset being used.
+        """
+        self.list = list(open(self.rgb_list_file))  # Load list of feature files
+
+        # If not in test mode, split the data into normal and abnormal segments
+        if self.test_mode is False:
+            # Different datasets have different splitting points between normal and abnormal data
+            if args.datasetname == 'UCF':
+                if self.is_normal:
+                    self.list = self.list[810:]  # Normal data indices (UCF: 810+)
+                else:
+                    self.list = self.list[:810]  # Abnormal data indices (UCF: 0-809)
+
+            if args.datasetname == 'MSAD':
+                if self.is_normal:
+                    self.list = self.list[120:]  # Normal data indices (MSAD: 120+)
+                    print('normal list')
+                    print(self.list)
+                else:
+                    self.list = self.list[:120]  # Abnormal data indices (MSAD: 0-119)
+                    print('abnormal list')
+                    print(self.list)
+
+            elif args.datasetname == 'XD':
+                if self.is_normal:
+                    self.list = self.list[9525:]  # Normal data indices (XD: 9525+)
+                    print('normal list')
+                    print(self.list)
+                else:
+                    self.list = self.list[:9525]  # Abnormal data indices (XD: 0-9524)
+                    print('abnormal list')
+                    print(self.list)
+
+            elif args.datasetname == 'SH':
+                if self.is_normal:
+                    self.list = self.list[63:]  # Normal data indices (SH: 63+)
+                    print('normal list')
+                    print(self.list)
+                else:
+                    self.list = self.list[:63]  # Abnormal data indices (SH: 0-62)
+                    print('abn

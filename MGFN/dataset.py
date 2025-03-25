@@ -80,7 +80,7 @@ class Dataset(data.Dataset):
             print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
         elif args.datasetname == 'XD':
-            features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+            features = np.load(self.list[index].strip('\n') , allow_pickle=True)
             features = np.array(features, dtype=np.float32)
             print(f"Initial features shape: {features.shape}")
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
