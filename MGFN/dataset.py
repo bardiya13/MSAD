@@ -16,7 +16,7 @@ class Dataset(data.Dataset):
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
-        self.frame_indices = []
+
         if shangatic:
             self.label_dir = label_dir
 
@@ -34,7 +34,7 @@ class Dataset(data.Dataset):
 
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))
-        self.frame_indices = [item.strip('\n') for item in self.list]#################
+
         # self.frame_indices = [os.path.splitext(os.path.basename(item.strip()))[0] for item in self.list]
         if self.test_mode is False:
             if args.datasetname == 'UCF':
@@ -215,7 +215,8 @@ class Dataset(data.Dataset):
     def get_label(self, index):
         if self.shangatic:
             # Load the label file for the current frame
-            label_path = os.path.join(self.label_dir, f"{self.frame_indices[index]}.npy")
+
+            label_path = os.path.join(self.label_dir, f"{self.rgb_list_file[index]}.npy")
 
             # Load the numpy array
             label_array = np.load(label_path)
