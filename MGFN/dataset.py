@@ -75,10 +75,14 @@ class Dataset(data.Dataset):
 
             elif args.datasetname == 'SH':
                 if self.is_normal:
-                    self.list = #TODO: those from the list with self.get_label(index)==0
+                    self.list = [self.list[i] for i in range(len(self.list))
+                                 if self.get_label(i) == 0]
 
                 else:
-                    self.list = #TODO: those from the list with self.get_label(index)==1
+                    self.list = [self.list[i] for i in range(len(self.list))
+                                 if self.get_label(i) == 1]
+
+
 
     def __getitem__(self, index):
         label = self.get_label(index)  # get video level label 0/1
