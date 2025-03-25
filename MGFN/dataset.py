@@ -34,6 +34,7 @@ class Dataset(data.Dataset):
 
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))
+        self.frame_indices = [item.strip('\n').split('/')[-1][:-4] for item in self.list]#################
         if self.test_mode is False:
             if args.datasetname == 'UCF':
                 if self.is_normal:
