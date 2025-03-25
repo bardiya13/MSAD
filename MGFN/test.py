@@ -47,9 +47,15 @@ if __name__ == '__main__':
     config = Config(args)
     device = torch.device("cuda")
     model = Model()
-    test_loader = DataLoader(Dataset(args, test_mode=True),
+    shangatic = False
+    label_dir= None
+    if args.datasetname == "SH":
+        shangatic = True
+        label_dir = "/kaggle/working/test_label"
+
+    test_loader = DataLoader(Dataset(args, test_mode=True, shangatic=shangatic, label_dir=label_dir),
                              batch_size=1, shuffle=False,
-                             num_workers=0, pin_memory=False)
+                             num_workers=0, pin_memory=False )
     model = model.to(device)
     model_dict = model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(args.testing_model).items()})
     auc = test(test_loader, model, args, device)
