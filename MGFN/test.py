@@ -52,7 +52,8 @@ if __name__ == '__main__':
     label_dir= None
     if args.datasetname == "SH":
         shangatic = True
-        label_dir = "/kaggle/working/test_label"
+
+        label_dir = "/kaggle/input/test-label"
 
     test_loader = DataLoader(Dataset(args, test_mode=True, shangatic=shangatic),
                              batch_size=1, shuffle=False,
