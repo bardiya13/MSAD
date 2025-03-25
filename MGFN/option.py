@@ -9,7 +9,7 @@ def parse_args():
     parser.add_argument('--modality', default='RGB', help='the type of the input, RGB, AUDIO, or MIX')
     parser.add_argument('--rgb-list', default='/kaggle/working/MSAD/MGFN/sh_train', help='list of rgb features ')
     parser.add_argument('--test-rgb-list', default='/kaggle/working/MSAD/MGFN/sh_test', help='list of test rgb features')
-    parser.add_argument('--gt', default='/kaggle/working/gt.npy', help='file of ground truth ')
+    parser.add_argument('--gt', default='/kaggle/working/ground_truth.npy', help='file of ground truth ')
     parser.add_argument('--mag_ratio', type=float, default=0.1, help='mag ratio')
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
