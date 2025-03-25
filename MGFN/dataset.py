@@ -12,18 +12,20 @@ args = option.parse_args()
 
 
 class Dataset(data.Dataset):
-    def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False, shangatic=False,
-                 label_dir=None):
+    def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False, shangatic=False):
 
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
-        if test_mode:
-            self.feature_address = args.test_feature_address
-        else:
-            self.feature_address = args.train_feature_address
         if shangatic:
-            self.label_dir = label_dir
+            if test_mode:
+                self.feature_address = args.test_feature_address
+                self.label_dir = args.test_label_address
+            else:
+                self.feature_address = args.train_feature_address
+                self.label_dir = args.train_label_address
+
+
 
         if test_mode:
             self.rgb_list_file = args.test_rgb_list

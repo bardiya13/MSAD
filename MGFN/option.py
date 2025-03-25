@@ -7,14 +7,17 @@ def parse_args():
     parser.add_argument('--feature_size', type=int, default=2048, help='size of feature (default: UCF:2048//xd:1024)')
     parser.add_argument('--hiddensize', type=int, default=512, help='size of feature (default: 512)')
     parser.add_argument('--modality', default='RGB', help='the type of the input, RGB, AUDIO, or MIX')
-    parser.add_argument('--rgb-list', default='/kaggle/input/train-label', help='list of rgb features ')
-    parser.add_argument('--test-rgb-list', default='/kaggle/input/test-label', help='list of test rgb features')
+    parser.add_argument('--rgb-list', default='/kaggle/working/MSAD/MGFN/sh_train', help='list of rgb features ')
+    parser.add_argument('--test-rgb-list', default='/kaggle/working/MSAD/MGFN/sh_test', help='list of test rgb features')
     parser.add_argument('--gt', default='babal_error', help='file of ground truth ')
     parser.add_argument('--mag_ratio', type=float, default=0.1, help='mag ratio')
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
     parser.add_argument('--test_feature_address', type=str, default="/kaggle/working/test_feau/output_copy_test", help='where did you store your test features?')
     parser.add_argument('--train_feature_address', type=str, default="/kaggle/working/train_feau/output_train 2", help='where did you store your train features?')
+    parser.add_argument('--test_label_address', type=str, default="/kaggle/input/test-label", help='where did you store your test labels?')
+    parser.add_argument('--train_label_address', type=str, default="/kaggle/input/train-label", help='where did you store your train labels?')
+
 
     parser.add_argument('--seg_length', type=int, default=32, help='default:32')
     parser.add_argument('--local_con', default='static', help='dynamic/static')
