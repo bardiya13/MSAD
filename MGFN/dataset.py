@@ -34,7 +34,7 @@ class Dataset(data.Dataset):
 
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))
-
+        self.list = [x.strip("\n").strip() for x in self.list]
         # self.frame_indices = [os.path.splitext(os.path.basename(item.strip()))[0] for item in self.list]
         if self.test_mode is False:
             if args.datasetname == 'UCF':
@@ -67,15 +67,15 @@ class Dataset(data.Dataset):
                     # print('abnormal list')
                     # print(self.list)
 
-            elif args.datasetname == 'SH':
-                if self.is_normal:
-                    self.list = self.list[63:]
-                    # print('normal list')
-                    # print(self.list)
-                else:
-                    self.list = self.list[:63]
-                    # print('abnormal list')
-                    # print(self.list)
+            # elif args.datasetname == 'SH':
+            #     if self.is_normal:
+            #         self.list = self.list[63:]
+            #         # print('normal list')
+            #         # print(self.list)
+            #     else:
+            #         self.list = self.list[:63]
+            #         # print('abnormal list')
+            #         # print(self.list)
 
     def __getitem__(self, index):
         label = self.get_label(index)  # get video level label 0/1
