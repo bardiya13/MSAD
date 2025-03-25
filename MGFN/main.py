@@ -37,12 +37,17 @@ except RuntimeError:
 if __name__ == '__main__':
     args=option.parse_args()
     config = Config(args)
-    train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
+
+    shangatic = False
+    if args.datasetname == "SH":
+        shangatic = True
+
+    train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True, shangatic=shangatic),
                                batch_size=args.batch_size, shuffle=False,
-                               num_workers=args.workers, pin_memory=False, drop_last=True)
+                               num_workers=args.workers, pin_memory=False, drop_last=True, shangatic=shangatic)
     train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
                                batch_size=args.batch_size, shuffle=False,
-                               num_workers=args.workers, pin_memory=False, drop_last=True)
+                               num_workers=args.workers, pin_memory=False, drop_last=True, shangatic=shangatic)
     test_loader = DataLoader(Dataset(args, test_mode=True),
                              batch_size=1, shuffle=False,
                              num_workers=0, pin_memory=False)

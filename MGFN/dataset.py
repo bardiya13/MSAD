@@ -73,15 +73,12 @@ class Dataset(data.Dataset):
                     # print('abnormal list')
                     # print(self.list)
 
-            # elif args.datasetname == 'SH':
-            #     if self.is_normal:
-            #         self.list = self.list[63:]
-            #         # print('normal list')
-            #         # print(self.list)
-            #     else:
-            #         self.list = self.list[:63]
-            #         # print('abnormal list')
-            #         # print(self.list)
+            elif args.datasetname == 'SH':
+                if self.is_normal:
+                    self.list = #TODO: those from the list with self.get_label(index)==0
+
+                else:
+                    self.list = #TODO: those from the list with self.get_label(index)==1
 
     def __getitem__(self, index):
         label = self.get_label(index)  # get video level label 0/1
@@ -242,7 +239,6 @@ class Dataset(data.Dataset):
             return label
 
     def __len__(self):
-
         return len(self.list)
 
     def get_num_frames(self):

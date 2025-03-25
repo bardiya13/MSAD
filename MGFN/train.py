@@ -1,16 +1,3 @@
-if __name__ == '__main__':
-    args = option.parse_args()
-    config = Config(args)
-    device = torch.device("cuda")
-    model = Model()
-
-    shangatic = False
-    if args.datasetname == "SH":
-        shangatic = True
-
-
-
-
 import torch
 import torch.nn.functional as F
 
