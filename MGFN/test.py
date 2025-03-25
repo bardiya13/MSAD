@@ -4,19 +4,20 @@ import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import auc, roc_curve, precision_recall_curve
 from tqdm import tqdm
-args=option.parse_args()
+
+args = option.parse_args()
 from config import *
 from models.mgfn import mgfn as Model
 from dataset import Dataset
+
 
 def test(dataloader, model, args, device):
     plt.clf()
     with torch.no_grad():
         model.eval()
         pred = torch.zeros(0)
-        featurelen =[]
+        featurelen = []
         for i, inputs in tqdm(enumerate(dataloader)):
-            
 
             input = inputs[0].to(device)
             # print(inputs[0].shape)
@@ -40,19 +41,15 @@ def test(dataloader, model, args, device):
         print('rec_auc : ' + str(rec_auc))
         return rec_auc, pr_auc
 
+
 if __name__ == '__main__':
     args = option.parse_args()
     config = Config(args)
     device = torch.device("cuda")
     model = Model()
     test_loader = DataLoader(Dataset(args, test_mode=True),
-                              batch_size=1, shuffle=False,
-                              num_workers=0, pin_memory=False)
-    for _ in test_loader:
-        print("BARDIA", len(_))
-        break
+                             batch_size=1, shuffle=False,
+                             num_workers=0, pin_memory=False)
     model = model.to(device)
     model_dict = model.load_state_dict({k.replace('module.', ''): v for k, v in torch.load(args.testing_model).items()})
     auc = test(test_loader, model, args, device)
-
-# ssh-add ~/.ssh/id_ed25519

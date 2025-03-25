@@ -12,7 +12,7 @@ from models.mgfn import mgfn
 from dataset import Dataset
 from train import train
 from test import test
-######################
+
 
 def save_config(save_path):
     path = save_path+'/'
@@ -34,7 +34,6 @@ except RuntimeError:
 
 
 if __name__ == '__main__':
-
     args=option.parse_args()
     config = Config(args)
     train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
@@ -65,7 +64,7 @@ if __name__ == '__main__':
     test_info = {"epoch": [], "test_AUC": [], "test_PR":[]}
 
     best_AUC = -1
-    best_PR = -1 
+    best_PR = -1
     iterator = 0
     for step in tqdm(
             range(1, args.max_epoch + 1),
