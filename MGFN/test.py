@@ -27,7 +27,7 @@ def test(dataloader, model, args, device):
             logits = torch.squeeze(logits, 1)
             logits = torch.mean(logits, 0)
             sig = logits
-            print(sig.shape)
+            print(sig.shape[0]*16)
             featurelen.append(len(sig))
             pred = torch.cat((pred, sig))
 
