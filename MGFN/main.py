@@ -44,11 +44,11 @@ if __name__ == '__main__':
 
     train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True, shangatic=shangatic),
                                batch_size=args.batch_size, shuffle=False,
-                               num_workers=args.workers, pin_memory=False, drop_last=True, shangatic=shangatic)
-    train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
+                               num_workers=args.workers, pin_memory=False, drop_last=True)
+    train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False, shangatic=shangatic),
                                batch_size=args.batch_size, shuffle=False,
-                               num_workers=args.workers, pin_memory=False, drop_last=True, shangatic=shangatic)
-    test_loader = DataLoader(Dataset(args, test_mode=True),
+                               num_workers=args.workers, pin_memory=False, drop_last=True)
+    test_loader = DataLoader(Dataset(args, test_mode=True, shangatic=shangatic),
                              batch_size=1, shuffle=False,
                              num_workers=0, pin_memory=False)
 
