@@ -15,7 +15,7 @@ class Dataset(data.Dataset):
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
-        self.label_dir = os.path.join(args.dataset_path, 'labels')#############
+        self.label_dir = os.path.join(args.dataset_path, '/kaggle/working/test_label')#############
 
             # ... existing code ...
 
@@ -26,7 +26,7 @@ class Dataset(data.Dataset):
         self.frame_indices = []
 
             # Path to the text file containing frame names
-        frames_list_file = os.path.join(args.dataset_path, 'frame_list.txt')  # Update this path as needed
+        frames_list_file = os.path.join(args.dataset_path, '/kaggle/working/MSAD/MGFN/sh_test')  # Update this path as needed
 
             # Read frame names from the text file
         if os.path.exists(frames_list_file):
