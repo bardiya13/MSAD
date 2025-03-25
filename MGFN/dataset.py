@@ -12,6 +12,7 @@ args = option.parse_args()
 
 class Dataset(data.Dataset):
     def __init__(self, args, is_normal=True, transform=None, test_mode=False, is_preprocessed=False, shangatic=False, label_dir=None):
+
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
