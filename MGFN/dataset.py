@@ -16,6 +16,7 @@ class Dataset(data.Dataset):
         self.modality = args.modality
         self.is_normal = is_normal
         self.shangatic = shangatic
+        self.frame_indices = []
         if shangatic:
             self.label_dir = label_dir
 
