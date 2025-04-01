@@ -83,3 +83,7 @@ if __name__ == '__main__':
 
     auc = test(test_loader, model, args, device)
     print(f"Final AUC results: {auc}")
+
+# git config --global user.name "Bardia Soltan"
+# git config --global user.email "bardisoltan@gmail.com"
+# ssh-add ~/.ssh/id_ed25519
