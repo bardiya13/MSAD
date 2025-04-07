@@ -18,7 +18,7 @@ def test(dataloader, model, args, device):
         pred = torch.zeros(0)
         featurelen = []
         for i, inputs in tqdm(enumerate(dataloader)):
-            print(f"\n--- Processing batch {i} ---")
+
             input = inputs[0].to(device)
 
 
@@ -43,13 +43,13 @@ def test(dataloader, model, args, device):
 
 
         gt = np.load(args.gt, allow_pickle=True)
-        print(f"Ground truth size: {len(gt)}")
+
 
         pred = list(pred.cpu().detach().numpy())
-        print(f"Prediction list size before repeat: {len(pred)}")
+
 
         pred = np.repeat(np.array(pred), 16)
-        print(f"Prediction array size after repeat: {len(pred)}")
+
 
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(Dataset(args, test_mode=True, shangatic=shangatic),
                              batch_size=1, shuffle=False,
                              num_workers=0, pin_memory=False)
-    print(f"Test loader created with {len(test_loader)} batches")
+
 
     model = model.to(device)
     print("Loading model weights...")
