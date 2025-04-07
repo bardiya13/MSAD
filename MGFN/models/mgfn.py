@@ -166,21 +166,21 @@ class Backbone(nn.Module):
             ]))
 
     def forward(self, x):
-        print(f"Backbone input shape: {x.shape}")
+
         for i, (scc, attention, ff) in enumerate(self.layers):
             x_scc = scc(x)
-            print(f"Layer {i} - Conv output shape: {x_scc.shape}")
+
             x = x_scc + x
 
             x_attn = attention(x)
-            print(f"Layer {i} - Attention output shape: {x_attn.shape}")
+
             x = x_attn + x
 
             x_ff = ff(x)
-            print(f"Layer {i} - FeedForward output shape: {x_ff.shape}")
+
             x = x_ff + x
 
-        print(f"Backbone output shape: {x.shape}")
+
         return x
 
 
@@ -242,7 +242,7 @@ class mgfn(nn.Module):
         self.to_mag = nn.Conv1d(1, init_dim, kernel_size=3, stride=1, padding=1)
 
     def forward(self, video):
-        print(f"mgfn input video shape: {video.shape}")
+
         k = 2
         # (100,10,2048)
         if len(video.size()) == 4:

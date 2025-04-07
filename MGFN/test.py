@@ -20,28 +20,28 @@ def test(dataloader, model, args, device):
         for i, inputs in tqdm(enumerate(dataloader)):
             print(f"\n--- Processing batch {i} ---")
             input = inputs[0].to(device)
-            print(f"Input shape: {input.shape}")
+
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-                print(f"Shape after permute: {input.shape}")
+
 
             _, _, _, _, logits = model(input)
-            print(f"Returned logits shape: {logits.shape}")
+
 
             logits = torch.squeeze(logits, 1)
-            print(f"After squeeze: {logits.shape}")
+
 
             logits = torch.mean(logits, 0)
-            print(f"After mean: {logits.shape}")
+
 
             sig = logits
-            print(f"Signature length: {sig.shape[0]}")
+
             featurelen.append(len(sig))
             pred = torch.cat((pred, sig))
-            print(f"Current prediction tensor size: {pred.size()}")
 
-        print(f"Final prediction tensor size: {pred.size()}")
+
+
         gt = np.load(args.gt, allow_pickle=True)
         print(f"Ground truth size: {len(gt)}")
 
