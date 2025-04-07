@@ -292,8 +292,6 @@ class mgfn(nn.Module):
 
         score_abnormal, score_normal, abn_feamagnitude, nor_feamagnitude, scores = MSNSD(x, scores, bs, self.batch_size,
                                                                                          self.drop_out, ncrops, k)
-        print(f"Final outputs - score_abnormal: {score_abnormal.shape}, score_normal: {score_normal.shape}")
-        print(f"abn_feamagnitude: {abn_feamagnitude.shape}, nor_feamagnitude: {nor_feamagnitude.shape}")
-        print(f"scores: {scores.shape}")
+
 
         return score_abnormal, score_normal, abn_feamagnitude, nor_feamagnitude, scores
