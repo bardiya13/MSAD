@@ -5,7 +5,7 @@ import torch
 import os
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
-import option
+from MGFN import option
 
 args = option.parse_args()
 

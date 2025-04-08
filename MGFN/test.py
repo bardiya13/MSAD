@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-import option
+from MGFN import option
 import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import auc, roc_curve, precision_recall_curve
