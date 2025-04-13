@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
-from MGFN import option
+import option
 
 args = option.parse_args()
 from torch import nn

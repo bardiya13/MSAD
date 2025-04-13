@@ -1,3 +1,4 @@
+#######################
 import torch.utils.data as data
 import numpy as np
 from utils.utils import process_feat
@@ -5,7 +6,7 @@ import torch
 import os
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
-from MGFN import option
+import option
 
 args = option.parse_args()
 
@@ -218,6 +219,21 @@ class Dataset(data.Dataset):
                 return divided_features, label
 
     def get_label(self, index):
+        if self.shangatic:
+            # Load the label file for the current frame
+
+            label_path = os.path.join(self.label_dir, f"{self.list[index]}.npy")
+
+            # Load the numpy array
+            label_array = np.load(label_path)
+
+            # Return 1 if sum > 0, else 0
+            if np.sum(label_array) > 0:
+                return torch.tensor(1.0)
+            else:
+                return torch.tensor(0.0)
+        else:
+            # Original logic for non-shangatic mode
             if self.is_normal:
                 # label[0] = 1
                 label = torch.tensor(0.0)
@@ -231,3 +247,4 @@ class Dataset(data.Dataset):
 
     def get_num_frames(self):
         return self.num_frame
+##################################
