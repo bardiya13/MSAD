@@ -1,8 +1,8 @@
 import torch
 from torch import nn, einsum
 from utils.utils import FeedForward, LayerNorm, GLANCE, FOCUS
-from MGFN import option
-
+import option
+#############
 args = option.parse_args()
 
 
