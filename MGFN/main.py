@@ -92,10 +92,13 @@ if __name__ == '__main__':
             auc, pr_auc = test(test_loader, model, args, device)
             # log_writer.add_scalar('auc-roc', auc, step)
             # log_writer.add_scalar('pr_auc', pr_auc, step)
+            #
 
             test_info["epoch"].append(step)
-            test_info["test_AUC"].append(auc)
-            test_info["test_PR"].append(pr_auc)
+            # test_info["test_AUC"].append(auc)
+            # test_info["test_PR"].append(pr_auc)
+            test_info["test_AUC"].append(1-auc)
+            test_info["test_PR"].append(1-pr_auc)
             if args.datasetname == 'XD':
                 if test_info["test_PR"][-1] > best_PR:
                     best_PR = test_info["test_PR"][-1]

@@ -4,214 +4,233 @@ import glob
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Use GPU 2 (index 1)
 import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class FrozenBN(nn.Module):
-	def __init__(self, num_channels, momentum=0.1, eps=1e-5):
-		super(FrozenBN, self).__init__()
-		self.num_channels = num_channels
-		self.momentum = momentum
-		self.eps = eps
-		self.params_set = False
+    def __init__(self, num_channels, momentum=0.1, eps=1e-5):
+        super(FrozenBN, self).__init__()
+        self.num_channels = num_channels
+        self.momentum = momentum
+        self.eps = eps
+        self.params_set = False
 
-	def set_params(self, scale, bias, running_mean, running_var):
-		self.register_buffer('scale', scale)
-		self.register_buffer('bias', bias)
-		self.register_buffer('running_mean', running_mean)
-		self.register_buffer('running_var', running_var)
-		self.params_set = True
+    def set_params(self, scale, bias, running_mean, running_var):
+        self.register_buffer('scale', scale)
+        self.register_buffer('bias', bias)
+        self.register_buffer('running_mean', running_mean)
+        self.register_buffer('running_var', running_var)
+        self.params_set = True
 
-	def forward(self, x):
-		assert self.params_set, 'model.set_params(...) must be called before the forward pass'
-		return torch.batch_norm(x, self.scale, self.bias, self.running_mean, self.running_var, False, self.momentum, self.eps, torch.backends.cudnn.enabled)
+    def forward(self, x):
+        assert self.params_set, 'model.set_params(...) must be called before the forward pass'
+        return torch.batch_norm(x, self.scale, self.bias, self.running_mean, self.running_var, False, self.momentum,
+                                self.eps, torch.backends.cudnn.enabled)
 
-	def __repr__(self):
-		return 'FrozenBN(%d)'%self.num_channels
+    def __repr__(self):
+        return 'FrozenBN(%d)' % self.num_channels
+
 
 def freeze_bn(m, name):
-	for attr_str in dir(m):
-		target_attr = getattr(m, attr_str)
-		if type(target_attr) == torch.nn.BatchNorm3d:
-			frozen_bn = FrozenBN(target_attr.num_features, target_attr.momentum, target_attr.eps)
-			frozen_bn.set_params(target_attr.weight.data, target_attr.bias.data, target_attr.running_mean, target_attr.running_var)
-			setattr(m, attr_str, frozen_bn)
-	for n, ch in m.named_children():
-		freeze_bn(ch, n)
+    for attr_str in dir(m):
+        target_attr = getattr(m, attr_str)
+        if type(target_attr) == torch.nn.BatchNorm3d:
+            frozen_bn = FrozenBN(target_attr.num_features, target_attr.momentum, target_attr.eps)
+            frozen_bn.set_params(target_attr.weight.data, target_attr.bias.data, target_attr.running_mean,
+                                 target_attr.running_var)
+            setattr(m, attr_str, frozen_bn)
+    for n, ch in m.named_children():
+        freeze_bn(ch, n)
 
-#-----------------------------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------------------------#
 
 class Bottleneck(nn.Module):
-	expansion = 4
+    expansion = 4
 
-	def __init__(self, inplanes, planes, stride, downsample, temp_conv, temp_stride, use_nl=False):
-		super(Bottleneck, self).__init__()
-		self.conv1 = nn.Conv3d(inplanes, planes, kernel_size=(1 + temp_conv * 2, 1, 1), stride=(temp_stride, 1, 1), padding=(temp_conv, 0, 0), bias=False)
-		self.bn1 = nn.BatchNorm3d(planes)
-		self.conv2 = nn.Conv3d(planes, planes, kernel_size=(1, 3, 3), stride=(1, stride, stride), padding=(0, 1, 1), bias=False)
-		self.bn2 = nn.BatchNorm3d(planes)
-		self.conv3 = nn.Conv3d(planes, planes * 4, kernel_size=1, stride=1, padding=0, bias=False)
-		self.bn3 = nn.BatchNorm3d(planes * 4)
-		self.relu = nn.ReLU(inplace=True)
-		self.downsample = downsample
-		self.stride = stride
+    def __init__(self, inplanes, planes, stride, downsample, temp_conv, temp_stride, use_nl=False):
+        super(Bottleneck, self).__init__()
+        self.conv1 = nn.Conv3d(inplanes, planes, kernel_size=(1 + temp_conv * 2, 1, 1), stride=(temp_stride, 1, 1),
+                               padding=(temp_conv, 0, 0), bias=False)
+        self.bn1 = nn.BatchNorm3d(planes)
+        self.conv2 = nn.Conv3d(planes, planes, kernel_size=(1, 3, 3), stride=(1, stride, stride), padding=(0, 1, 1),
+                               bias=False)
+        self.bn2 = nn.BatchNorm3d(planes)
+        self.conv3 = nn.Conv3d(planes, planes * 4, kernel_size=1, stride=1, padding=0, bias=False)
+        self.bn3 = nn.BatchNorm3d(planes * 4)
+        self.relu = nn.ReLU(inplace=True)
+        self.downsample = downsample
+        self.stride = stride
 
-		outplanes = planes * 4
-		self.nl = NonLocalBlock(outplanes, outplanes, outplanes//2) if use_nl else None
+        outplanes = planes * 4
+        self.nl = NonLocalBlock(outplanes, outplanes, outplanes // 2) if use_nl else None
 
-	def forward(self, x):
-		residual = x
+    def forward(self, x):
+        residual = x
 
-		out = self.conv1(x)
-		out = self.bn1(out)
-		out = self.relu(out)
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
 
-		out = self.conv2(out)
-		out = self.bn2(out)
-		out = self.relu(out)
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
 
-		out = self.conv3(out)
-		out = self.bn3(out)
+        out = self.conv3(out)
+        out = self.bn3(out)
 
-		if self.downsample is not None:
-			residual = self.downsample(x)
+        if self.downsample is not None:
+            residual = self.downsample(x)
 
-		out += residual
-		out = self.relu(out)
+        out += residual
+        out = self.relu(out)
 
-		if self.nl is not None:
-			out = self.nl(out)
+        if self.nl is not None:
+            out = self.nl(out)
 
-		return out
+        return out
+
 
 class NonLocalBlock(nn.Module):
-	def __init__(self, dim_in, dim_out, dim_inner):
-		super(NonLocalBlock, self).__init__()
+    def __init__(self, dim_in, dim_out, dim_inner):
+        super(NonLocalBlock, self).__init__()
 
-		self.dim_in = dim_in
-		self.dim_inner = dim_inner
-		self.dim_out = dim_out
+        self.dim_in = dim_in
+        self.dim_inner = dim_inner
+        self.dim_out = dim_out
 
-		self.theta = nn.Conv3d(dim_in, dim_inner, kernel_size=(1,1,1), stride=(1,1,1), padding=(0,0,0))
-		self.maxpool = nn.MaxPool3d(kernel_size=(1,2,2), stride=(1,2,2), padding=(0,0,0))
-		self.phi = nn.Conv3d(dim_in, dim_inner, kernel_size=(1,1,1), stride=(1,1,1), padding=(0,0,0))
-		self.g = nn.Conv3d(dim_in, dim_inner, kernel_size=(1,1,1), stride=(1,1,1), padding=(0,0,0))
+        self.theta = nn.Conv3d(dim_in, dim_inner, kernel_size=(1, 1, 1), stride=(1, 1, 1), padding=(0, 0, 0))
+        self.maxpool = nn.MaxPool3d(kernel_size=(1, 2, 2), stride=(1, 2, 2), padding=(0, 0, 0))
+        self.phi = nn.Conv3d(dim_in, dim_inner, kernel_size=(1, 1, 1), stride=(1, 1, 1), padding=(0, 0, 0))
+        self.g = nn.Conv3d(dim_in, dim_inner, kernel_size=(1, 1, 1), stride=(1, 1, 1), padding=(0, 0, 0))
 
-		self.out = nn.Conv3d(dim_inner, dim_out, kernel_size=(1,1,1), stride=(1,1,1), padding=(0,0,0))
-		self.bn = nn.BatchNorm3d(dim_out)
+        self.out = nn.Conv3d(dim_inner, dim_out, kernel_size=(1, 1, 1), stride=(1, 1, 1), padding=(0, 0, 0))
+        self.bn = nn.BatchNorm3d(dim_out)
 
-	def forward(self, x):
-		residual = x
+    def forward(self, x):
+        residual = x
 
-		batch_size = x.shape[0]
-		mp = self.maxpool(x)
-		theta = self.theta(x)
-		phi = self.phi(mp)
-		g = self.g(mp)
+        batch_size = x.shape[0]
+        mp = self.maxpool(x)
+        theta = self.theta(x)
+        phi = self.phi(mp)
+        g = self.g(mp)
 
-		theta_shape_5d = theta.shape
-		theta, phi, g = theta.view(batch_size, self.dim_inner, -1), phi.view(batch_size, self.dim_inner, -1), g.view(batch_size, self.dim_inner, -1)
+        theta_shape_5d = theta.shape
+        theta, phi, g = theta.view(batch_size, self.dim_inner, -1), phi.view(batch_size, self.dim_inner, -1), g.view(
+            batch_size, self.dim_inner, -1)
 
-		theta_phi = torch.bmm(theta.transpose(1, 2), phi) # (8, 1024, 784) * (8, 1024, 784) => (8, 784, 784)
-		theta_phi_sc = theta_phi * (self.dim_inner**-.5)
-		p = F.softmax(theta_phi_sc, dim=-1)
+        theta_phi = torch.bmm(theta.transpose(1, 2), phi)  # (8, 1024, 784) * (8, 1024, 784) => (8, 784, 784)
+        theta_phi_sc = theta_phi * (self.dim_inner ** -.5)
+        p = F.softmax(theta_phi_sc, dim=-1)
 
-		t = torch.bmm(g, p.transpose(1, 2))
-		t = t.view(theta_shape_5d)
+        t = torch.bmm(g, p.transpose(1, 2))
+        t = t.view(theta_shape_5d)
 
-		out = self.out(t)
-		out = self.bn(out)
+        out = self.out(t)
+        out = self.bn(out)
 
-		out = out + residual
-		return out
+        out = out + residual
+        return out
 
-#-----------------------------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------------------------#
 
 class I3Res50(nn.Module):
 
-	def __init__(self, block=Bottleneck, layers=[3, 4, 6, 3], num_classes=400, use_nl=False):
-		self.inplanes = 64
-		super(I3Res50, self).__init__()
-		self.conv1 = nn.Conv3d(3, 64, kernel_size=(5, 7, 7), stride=(2, 2, 2), padding=(2, 3, 3), bias=False)
-		self.bn1 = nn.BatchNorm3d(64)
-		self.relu = nn.ReLU(inplace=True)
-		self.maxpool1 = nn.MaxPool3d(kernel_size=(2, 3, 3), stride=(2, 2, 2), padding=(0, 0, 0))
-		self.maxpool2 = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1), padding=(0, 0, 0))
+    def __init__(self, block=Bottleneck, layers=[3, 4, 6, 3], num_classes=400, use_nl=False):
+        self.inplanes = 64
+        super(I3Res50, self).__init__()
+        self.conv1 = nn.Conv3d(3, 64, kernel_size=(5, 7, 7), stride=(2, 2, 2), padding=(2, 3, 3), bias=False)
+        self.bn1 = nn.BatchNorm3d(64)
+        self.relu = nn.ReLU(inplace=True)
+        self.maxpool1 = nn.MaxPool3d(kernel_size=(2, 3, 3), stride=(2, 2, 2), padding=(0, 0, 0))
+        self.maxpool2 = nn.MaxPool3d(kernel_size=(2, 1, 1), stride=(2, 1, 1), padding=(0, 0, 0))
 
-		nonlocal_mod = 2 if use_nl else 1000
-		self.layer1 = self._make_layer(block, 64, layers[0], stride=1, temp_conv=[1, 1, 1], temp_stride=[1, 1, 1])
-		self.layer2 = self._make_layer(block, 128, layers[1], stride=2, temp_conv=[1, 0, 1, 0], temp_stride=[1, 1, 1, 1], nonlocal_mod=nonlocal_mod)
-		self.layer3 = self._make_layer(block, 256, layers[2], stride=2, temp_conv=[1, 0, 1, 0, 1, 0], temp_stride=[1, 1, 1, 1, 1, 1], nonlocal_mod=nonlocal_mod)
-		self.layer4 = self._make_layer(block, 512, layers[3], stride=2, temp_conv=[0, 1, 0], temp_stride=[1, 1, 1])
-		self.avgpool = nn.AdaptiveAvgPool3d((1, 1, 1))
-		self.fc = nn.Linear(512 * block.expansion, num_classes)
-		self.drop = nn.Dropout(0.5)
+        nonlocal_mod = 2 if use_nl else 1000
+        self.layer1 = self._make_layer(block, 64, layers[0], stride=1, temp_conv=[1, 1, 1], temp_stride=[1, 1, 1])
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=2, temp_conv=[1, 0, 1, 0],
+                                       temp_stride=[1, 1, 1, 1], nonlocal_mod=nonlocal_mod)
+        self.layer3 = self._make_layer(block, 256, layers[2], stride=2, temp_conv=[1, 0, 1, 0, 1, 0],
+                                       temp_stride=[1, 1, 1, 1, 1, 1], nonlocal_mod=nonlocal_mod)
+        self.layer4 = self._make_layer(block, 512, layers[3], stride=2, temp_conv=[0, 1, 0], temp_stride=[1, 1, 1])
+        self.avgpool = nn.AdaptiveAvgPool3d((1, 1, 1))
+        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.drop = nn.Dropout(0.5)
 
-		for m in self.modules():
-			if isinstance(m, nn.Conv3d):
-				m.weight = nn.init.kaiming_normal_(m.weight, mode='fan_out')
-			elif isinstance(m, nn.BatchNorm3d):
-				m.weight.data.fill_(1)
-				m.bias.data.zero_()
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                m.weight = nn.init.kaiming_normal_(m.weight, mode='fan_out')
+            elif isinstance(m, nn.BatchNorm3d):
+                m.weight.data.fill_(1)
+                m.bias.data.zero_()
 
-	def _make_layer(self, block, planes, blocks, stride, temp_conv, temp_stride, nonlocal_mod=1000):
-		downsample = None
-		if stride != 1 or self.inplanes != planes * block.expansion or temp_stride[0]!=1:
-			downsample = nn.Sequential(
-				nn.Conv3d(self.inplanes, planes * block.expansion, kernel_size=(1, 1, 1), stride=(temp_stride[0], stride, stride), padding=(0, 0, 0), bias=False),
-				nn.BatchNorm3d(planes * block.expansion)
-				)
+    def _make_layer(self, block, planes, blocks, stride, temp_conv, temp_stride, nonlocal_mod=1000):
+        downsample = None
+        if stride != 1 or self.inplanes != planes * block.expansion or temp_stride[0] != 1:
+            downsample = nn.Sequential(
+                nn.Conv3d(self.inplanes, planes * block.expansion, kernel_size=(1, 1, 1),
+                          stride=(temp_stride[0], stride, stride), padding=(0, 0, 0), bias=False),
+                nn.BatchNorm3d(planes * block.expansion)
+            )
 
-		layers = []
-		layers.append(block(self.inplanes, planes, stride, downsample, temp_conv[0], temp_stride[0], False))
-		self.inplanes = planes * block.expansion
-		for i in range(1, blocks):
-			layers.append(block(self.inplanes, planes, 1, None, temp_conv[i], temp_stride[i], i%nonlocal_mod==nonlocal_mod-1))
+        layers = []
+        layers.append(block(self.inplanes, planes, stride, downsample, temp_conv[0], temp_stride[0], False))
+        self.inplanes = planes * block.expansion
+        for i in range(1, blocks):
+            layers.append(block(self.inplanes, planes, 1, None, temp_conv[i], temp_stride[i],
+                                i % nonlocal_mod == nonlocal_mod - 1))
 
-		return nn.Sequential(*layers)
+        return nn.Sequential(*layers)
 
-	def forward_single(self, x):
-		x = self.conv1(x)
-		x = self.bn1(x)
-		x = self.relu(x)
-		x = self.maxpool1(x)
+    def forward_single(self, x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.maxpool1(x)
 
-		x = self.layer1(x)
-		x = self.maxpool2(x)
-		x = self.layer2(x)
-		x = self.layer3(x)
-		x = self.layer4(x)
+        x = self.layer1(x)
+        x = self.maxpool2(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
 
-		x = self.avgpool(x)
-		return x
+        x = self.avgpool(x)
+        return x
 
-	def forward(self, batch):
-		if batch['frames'].dim() == 5:
-			feat = self.forward_single(batch['frames'])
-		return feat
+    def forward(self, batch):
+        if batch['frames'].dim() == 5:
+            feat = self.forward_single(batch['frames'])
+        return feat
 
-#-----------------------------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------------------------#
 
 def i3_res50(num_classes, pretrainedpath):
-		net = I3Res50(num_classes=num_classes, use_nl=False)
-		state_dict = torch.load(pretrainedpath, weights_only=True)
-		net.load_state_dict(state_dict)
-		print("Received Pretrained model..")
-		# freeze_bn(net, "net") # Only needed for finetuning. For validation, .eval() works.
-		return net
+    net = I3Res50(num_classes=num_classes, use_nl=False)
+    state_dict = torch.load(pretrainedpath, weights_only=True)
+    net.load_state_dict(state_dict)
+    print("Received Pretrained model..")
+    # freeze_bn(net, "net") # Only needed for finetuning. For validation, .eval() works.
+    return net
+
 
 def i3_res50_nl(num_classes, pretrainedpath):
-		net = I3Res50(num_classes=num_classes, use_nl=True)
-		state_dict = torch.load(pretrainedpath, weights_only=False)
-		net.load_state_dict(state_dict)
-		# freeze_bn(net, "net") # Only needed for finetuning. For validation, .eval() works.
-		return net
+    net = I3Res50(num_classes=num_classes, use_nl=True)
+    state_dict = torch.load(pretrainedpath, weights_only=False)
+    net.load_state_dict(state_dict)
+    # freeze_bn(net, "net") # Only needed for finetuning. For validation, .eval() works.
+    return net
+
 
 import os
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 
 import torch
 import numpy as np
@@ -219,15 +238,17 @@ from PIL import Image
 from natsort import natsorted
 from torch.autograd import Variable
 
+
 def load_frame(frame_file):
     data = Image.open(frame_file)
     data = data.resize((340, 256), Image.Resampling.LANCZOS)
     data = np.array(data)
     data = data.astype(float)
     data = (data * 2 / 255) - 1
-    assert(data.max()<=1.0)
-    assert(data.min()>=-1.0)
+    assert (data.max() <= 1.0)
+    assert (data.min() >= -1.0)
     return data
+
 
 def load_rgb_batch(rgb_files, frame_indices):
     batch_data = np.zeros(frame_indices.shape + (256, 340, 3))  # Shape: (batch_size, chunk_size, 256, 340, 3)
@@ -236,9 +257,10 @@ def load_rgb_batch(rgb_files, frame_indices):
             batch_data[i, j, :, :, :] = load_frame(rgb_files[frame_indices[i][j]])  # Use full paths
     return batch_data
 
+
 def oversample_data(data):
     # 19, 16, 256, 340, 3
-    data_flip = np.array(data[:,:,:,::-1,:])
+    data_flip = np.array(data[:, :, :, ::-1, :])
 
     data_1 = np.array(data[:, :, :224, :224, :])
     data_2 = np.array(data[:, :, :224, -224:, :])
@@ -253,7 +275,9 @@ def oversample_data(data):
     data_f_5 = np.array(data_flip[:, :, -224:, -224:, :])
 
     return [data_1, data_2, data_3, data_4, data_5,
-      data_f_1, data_f_2, data_f_3, data_f_4, data_f_5]
+            data_f_1, data_f_2, data_f_3, data_f_4, data_f_5]
+
+
 ##########################
 # I3D Model Weight Conversion
 # This notebook converts Caffe2 weights to PyTorch format for I3D ResNet-50 model
@@ -283,7 +307,7 @@ os.makedirs(os.path.dirname(pth_weights_out), exist_ok=True)
 # Load Caffe2 weights
 print(f"Loading Caffe2 weights from: {c2_weights}")
 c2 = pickle.load(open(c2_weights, 'rb'), encoding='latin')['blobs']
-c2 = {k:v for k,v in c2.items() if 'momentum' not in k}
+c2 = {k: v for k, v in c2.items() if 'momentum' not in k}
 print(f"Loaded {len(c2)} weight blobs")
 
 # Regular expressions for matching layer names
@@ -292,19 +316,19 @@ conv_pat = re.compile('res(.)_(.)_branch2(.)_.*')
 nl_pat = re.compile('nonlocal_conv(.)_(.)_(.*)_.*')
 
 # Mapping from module letters to numbers
-m2num = dict(zip('abc',[1,2,3]))
-suffix_dict = {'b':'bias', 'w':'weight', 's':'weight', 'rm':'running_mean', 'riv':'running_var'}
+m2num = dict(zip('abc', [1, 2, 3]))
+suffix_dict = {'b': 'bias', 'w': 'weight', 's': 'weight', 'rm': 'running_mean', 'riv': 'running_var'}
 
 # Initialize key mapping dictionary
 key_map = {}
 key_map.update({
-    'conv1.weight':'conv1_w',
-    'bn1.weight':'res_conv1_bn_s',
-    'bn1.bias':'res_conv1_bn_b',
-    'bn1.running_mean':'res_conv1_bn_rm',
-    'bn1.running_var':'res_conv1_bn_riv',
-    'fc.weight':'pred_w',
-    'fc.bias':'pred_b',
+    'conv1.weight': 'conv1_w',
+    'bn1.weight': 'res_conv1_bn_s',
+    'bn1.bias': 'res_conv1_bn_b',
+    'bn1.running_mean': 'res_conv1_bn_rm',
+    'bn1.running_var': 'res_conv1_bn_riv',
+    'fc.weight': 'pred_w',
+    'fc.bias': 'pred_b',
 })
 
 # Process regular convolution layers
@@ -316,7 +340,7 @@ for key in c2:
         layer, block, module = int(layer), int(block), m2num[module]
         name = 'bn' if 'bn_' in key else 'conv'
         suffix = suffix_dict[key.split('_')[-1]]
-        new_key = f'layer{layer-1}.{block}.{name}{module}.{suffix}'
+        new_key = f'layer{layer - 1}.{block}.{name}{module}.{suffix}'
         key_map[new_key] = key
 
     # Match downsample layers
@@ -324,10 +348,10 @@ for key in c2:
     if ds_match:
         layer, block = ds_match.groups()
         layer, block = int(layer), int(block)
-        module = 0 if key[-1]=='w' else 1
+        module = 0 if key[-1] == 'w' else 1
         name = 'downsample'
         suffix = suffix_dict[key.split('_')[-1]]
-        new_key = f'layer{layer-1}.{block}.{name}.{module}.{suffix}'
+        new_key = f'layer{layer - 1}.{block}.{name}.{module}.{suffix}'
         key_map[new_key] = key
 
     # Match non-local layers
@@ -337,13 +361,14 @@ for key in c2:
         layer, block = int(layer), int(block)
         name = f'nl.{module}'
         suffix = suffix_dict[key.split('_')[-1]]
-        new_key = f'layer{layer-1}.{block}.{name}.{suffix}'
+        new_key = f'layer{layer - 1}.{block}.{name}.{suffix}'
         key_map[new_key] = key
 
 # Import the model
 # Note: Make sure the 'models' directory with resnet.py is in your working directory
 print("Loading PyTorch model")
 import resnet
+
 pth = resnet.I3Res50(num_classes=400, use_nl=True)
 state_dict = pth.state_dict()
 
@@ -354,7 +379,7 @@ new_state_dict = {key: torch.from_numpy(c2[key_map[key]]) for key in state_dict 
 # Save converted weights
 print(f"Saving converted weights to: {pth_weights_out}")
 torch.save(new_state_dict, pth_weights_out)
-torch.save(key_map, pth_weights_out+'.keymap')
+torch.save(key_map, pth_weights_out + '.keymap')
 
 # Verify weight dimensions match
 print("\nVerifying weight dimensions match:")
