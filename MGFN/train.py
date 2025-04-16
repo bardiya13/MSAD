@@ -75,37 +75,76 @@ class mgfn_loss(torch.nn.Module):
         return loss_total
 
 
+# def train(nloader, aloader, model, batch_size, optimizer, device, iterator=0):
+#
+#     with torch.set_grad_enabled(True):
+#         model.train()
+#         for step, ((ninput, nlabel), (ainput, alabel)) in tqdm(enumerate(
+#                 zip(nloader, aloader))):
+#             input = torch.cat((ninput, ainput), 0).to(device)
+#
+#             score_abnormal, score_normal, abn_feamagnitude, nor_feamagnitude, scores = model(input)  # b*32  x 2048
+#
+#             loss_sparse = sparsity(scores[:batch_size, :, :].view(-1), batch_size, 8e-3)
+#
+#             loss_smooth = smooth(scores, 8e-4)
+#
+#             scores = scores.view(batch_size * 32 * 2, -1)
+#             scores = scores.squeeze()
+#
+#             nlabel = nlabel[0:batch_size]
+#             # print(nlabel)
+#             alabel = alabel[0:batch_size]
+#             # print(alabel)
+#
+#             loss_criterion = mgfn_loss(0.0001)
+#
+#             cost = loss_criterion(score_normal, score_abnormal, nlabel, alabel, nor_feamagnitude,
+#                                   abn_feamagnitude) + loss_smooth + loss_sparse
+#
+#             optimizer.zero_grad()
+#             cost.backward()
+#
+#             optimizer.step()
+#             iterator += 1
+#
+#         return cost.item(), loss_smooth.item(), loss_sparse.item()
 def train(nloader, aloader, model, batch_size, optimizer, device, iterator=0):
-
+    cost = None
+    loss_smooth = None
+    loss_sparse = None
+    model.train()
+    num_batches = 0
     with torch.set_grad_enabled(True):
-        model.train()
-        for step, ((ninput, nlabel), (ainput, alabel)) in tqdm(enumerate(
-                zip(nloader, aloader))):
-            input = torch.cat((ninput, ainput), 0).to(device)
 
-            score_abnormal, score_normal, abn_feamagnitude, nor_feamagnitude, scores = model(input)  # b*32  x 2048
+        # Let's "zip" explicitly and debug the pairs
+        zipped = list(zip(nloader, aloader))
+        print(f'Number of zipped batches: {len(zipped)}')
+        for step, ((ninput, nlabel), (ainput, alabel)) in tqdm(enumerate(zipped), total=len(zipped)):
+            print(f'Batch {step} - shapes: ninput: {getattr(ninput, "shape", None)}, nlabel: {nlabel}, ainput: {getattr(ainput, "shape", None)}, alabel: {alabel}')
+            # Convert numpy to torch
+            ninput = torch.from_numpy(ninput).float().to(device)
+            nlabel = nlabel.to(device)
+            ainput = torch.from_numpy(ainput).float().to(device)
+            alabel = alabel.to(device)
 
+            input = torch.cat((ninput, ainput), 0)
+            score_abnormal, score_normal, abn_feamagnitude, nor_feamagnitude, scores = model(input)
             loss_sparse = sparsity(scores[:batch_size, :, :].view(-1), batch_size, 8e-3)
-
             loss_smooth = smooth(scores, 8e-4)
-
             scores = scores.view(batch_size * 32 * 2, -1)
             scores = scores.squeeze()
-
             nlabel = nlabel[0:batch_size]
-            # print(nlabel)
             alabel = alabel[0:batch_size]
-            # print(alabel)
-
             loss_criterion = mgfn_loss(0.0001)
-
-            cost = loss_criterion(score_normal, score_abnormal, nlabel, alabel, nor_feamagnitude,
-                                  abn_feamagnitude) + loss_smooth + loss_sparse
-
+            cost = loss_criterion(score_normal, score_abnormal, nlabel, alabel, nor_feamagnitude, abn_feamagnitude) + loss_smooth + loss_sparse
             optimizer.zero_grad()
             cost.backward()
-
             optimizer.step()
             iterator += 1
+            num_batches += 1
 
-        return cost.item(), loss_smooth.item(), loss_sparse.item()
+    if cost is None or num_batches == 0:
+        raise RuntimeError("No batches were processed in the training loop. Check your dataloaders and Dataset output structure.")
+
+    return cost.item(), loss_smooth.item(), loss_sparse.item()
