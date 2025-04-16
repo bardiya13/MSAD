@@ -37,7 +37,7 @@ except RuntimeError:
 if __name__ == '__main__':
     args=option.parse_args()
     config = Config(args)
-
+    test_mode = False
     shangatic = False
     if args.datasetname == "SH":
         shangatic = True
