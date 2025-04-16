@@ -52,6 +52,8 @@ if __name__ == '__main__':
                              batch_size=1, shuffle=False,
                              num_workers=0, pin_memory=False)
 
+    print("train_nloader length:", len(train_nloader.dataset))
+    print("train_aloader length:", len(train_aloader.dataset))
 
     model = mgfn()
     if args.pretrained_ckpt is not None:
