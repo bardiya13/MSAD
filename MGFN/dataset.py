@@ -52,7 +52,7 @@ class Dataset(data.Dataset):
                     self.list = self.list[:810]  # ucf 810; sht 63; 9525
                     # print('abnormal list')
                     # print(self.list)
-
+#
             if args.datasetname == 'MSAD':
                 if self.is_normal:
                     self.list = self.list[120:]

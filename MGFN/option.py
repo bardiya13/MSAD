@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('--test_label_address', type=str, default="/kaggle/input/ucsd-p2/test_labels_new/test_labels_new", help='where did you store your test labels?')
     parser.add_argument('--train_label_address', type=str, default="/kaggle/input/ucsd-p2/train_labels_new/train_labels_new", help='where did you store your train labels?')
 
-
+#
     parser.add_argument('--seg_length', type=int, default=32, help='default:32')
     parser.add_argument('--local_con', default='static', help='dynamic/static')
     #for dynamic
