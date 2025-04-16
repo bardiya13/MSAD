@@ -18,12 +18,12 @@ class Dataset(data.Dataset):
         self.is_normal = is_normal
         self.shangatic = shangatic
         if shangatic:
-            if test_mode:
-                self.feature_address = args.test_feature_address
-                self.label_dir = args.test_label_address
-            else:
-                self.feature_address = args.train_feature_address
-                self.label_dir = args.train_label_address
+            # if test_mode:
+            #     self.feature_address = args.test_feature_address
+            #     self.label_dir = args.test_label_address
+            # else:
+            self.feature_address = args.train_feature_address
+            self.label_dir = args.train_label_address
 
 
 
@@ -108,7 +108,6 @@ class Dataset(data.Dataset):
         elif args.datasetname == 'SH':
 
             features = np.load(os.path.join(self.feature_address, self.list[index].strip('\n')+".npy"), allow_pickle=True)
-            print("Trying to open:", features)
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
