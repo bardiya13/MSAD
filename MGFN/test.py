@@ -34,6 +34,7 @@ def test(dataloader, model, args, device):
         gt = np.load(args.gt, allow_pickle=True)
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
+
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
         precision, recall, th = precision_recall_curve(list(gt), pred)
