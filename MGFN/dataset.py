@@ -18,12 +18,12 @@ class Dataset(data.Dataset):
         self.is_normal = is_normal
         self.shangatic = shangatic
         if shangatic:
-            # if test_mode:
-            #     self.feature_address = args.test_feature_address
-            #     self.label_dir = args.test_label_address
-            # else:
-            self.feature_address = args.train_feature_address
-            self.label_dir = args.train_label_address
+            if test_mode:
+                self.feature_address = args.test_feature_address
+                self.label_dir = args.test_label_address
+            else:
+                self.feature_address = args.train_feature_address
+                self.label_dir = args.train_label_address
 
 
 
