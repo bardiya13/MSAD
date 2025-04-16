@@ -15,7 +15,7 @@ def parse_args():
 
     parser.add_argument('--test_feature_address', type=str, default="/kaggle/input/kkkkkkkkk/train_feature_UCSD2/output_train", help='where did you store your test features?')
     parser.add_argument('--train_feature_address', type=str, default="/kaggle/input/kkkkkkkkk/train_feature_UCSD2/output_train", help='where did you store your train features?')
-    parser.add_argument('--test_label_address', type=str, default="/kaggle/input/ucsd-p2/test_labels_new/test_labels_new", help='where did you store your test labels?')
+    parser.add_argument('--test_label_address', type=str, default="/kaggle/input/ucsd-p2/train_labels_new/train_labels_new", help='where did you store your test labels?')
     parser.add_argument('--train_label_address', type=str, default="/kaggle/input/ucsd-p2/train_labels_new/train_labels_new", help='where did you store your train labels?')
 
 #
