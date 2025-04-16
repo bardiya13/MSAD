@@ -54,6 +54,17 @@ if __name__ == '__main__':
 
     print("train_nloader length:", len(train_nloader.dataset))
     print("train_aloader length:", len(train_aloader.dataset))
+    print("Testing batches of nloader:")
+    for batch in train_nloader:
+        print("Type of batch:", type(batch))
+        print("Batch contents:", batch)
+        break
+
+    print("Testing batches of aloader:")
+    for batch in train_aloader:
+        print("Type of batch:", type(batch))
+        print("Batch contents:", batch)
+        break
 
     model = mgfn()
     if args.pretrained_ckpt is not None:
@@ -109,14 +120,4 @@ if __name__ == '__main__':
                     save_best_record(test_info, os.path.join(savepath + "/", '{}-step-AUC.txt'.format(step)))
     torch.save(model.state_dict(), './ckpt/' + args.model_name + 'final.pkl')
 
-print("Testing batches of nloader:")
-for batch in train_nloader:
-    print("Type of batch:", type(batch))
-    print("Batch contents:", batch)
-    break
 
-print("Testing batches of aloader:")
-for batch in train_aloader:
-    print("Type of batch:", type(batch))
-    print("Batch contents:", batch)
-    break
