@@ -76,9 +76,7 @@ class mgfn_loss(torch.nn.Module):
 
 
 def train(nloader, aloader, model, batch_size, optimizer, device, iterator=0):
-    cost = torch.tensor(0.0)
-    loss_smooth = torch.tensor(0.0)
-    loss_sparse = torch.tensor(0.0) # Add this line
+
     with torch.set_grad_enabled(True):
         model.train()
         for step, ((ninput, nlabel), (ainput, alabel)) in tqdm(enumerate(
