@@ -55,13 +55,13 @@ if __name__ == '__main__':
     print("train_nloader length:", len(train_nloader.dataset))
     print("train_aloader length:", len(train_aloader.dataset))
     print("Testing batches of nloader:")
-    for batch in train_nloader:
+    for batch in train_nloader.dataset:
         print("Type of batch:", type(batch))
         print("Batch contents:", batch)
         break
 
     print("Testing batches of aloader:")
-    for batch in train_aloader:
+    for batch in train_aloader.dataset:
         print("Type of batch:", type(batch))
         print("Batch contents:", batch)
         break
