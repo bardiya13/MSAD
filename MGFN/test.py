@@ -39,8 +39,8 @@ def test(dataloader, model, args, device):
         rec_auc = auc(fpr, tpr)
         precision, recall, th = precision_recall_curve(list(gt), pred)
         pr_auc = auc(recall, precision)
-        print('pr_auc : ' + str(1-pr_auc))
-        print('rec_auc : ' + str(1-rec_auc))
+        print('pr_auc : ' + str(pr_auc))
+        print('rec_auc : ' + str(rec_auc))
         return rec_auc, pr_auc
 
 
