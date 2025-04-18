@@ -108,5 +108,5 @@ def train(nloader, aloader, model, batch_size, optimizer, device, iterator=0):
             optimizer.step()
             iterator += 1
 
-        # return cost.item(), loss_smooth.item(), loss_sparse.item()
-        return loss_smooth.item(), loss_sparse.item()
+        return cost.item(), loss_smooth.item(), loss_sparse.item()
+

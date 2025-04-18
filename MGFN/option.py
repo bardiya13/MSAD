@@ -8,17 +8,17 @@ def parse_args():
     parser.add_argument('--hiddensize', type=int, default=512, help='size of feature (default: 512)')
     parser.add_argument('--modality', default='RGB', help='the type of the input, RGB, AUDIO, or MIX')
     parser.add_argument('--rgb-list', default='/kaggle/working/train_folder_list.txt', help='list of rgb features ')
-    parser.add_argument('--test-rgb-list', default='/kaggle/working/test_folder_list.txt', help='list of test rgb features')
-    parser.add_argument('--gt', default="/kaggle/working/ground_truth_test_new.npy", help='file of ground truth ')
+    parser.add_argument('--test-rgb-list', default='/kaggle/working/ucsd-p2/file_names.txt', help='list of test rgb features')
+    parser.add_argument('--gt', default="/kaggle/working/ground_truth_merged.npy", help='file of ground truth ')
     parser.add_argument('--mag_ratio', type=float, default=0.1, help='mag ratio')
     parser.add_argument('--comment', default='mgfn', help='comment for the ckpt name of the training')
 
-    parser.add_argument('--test_feature_address', type=str, default="/kaggle/input/kkkkkkkkk/train_feature_UCSD2/output_train", help='where did you store your test features?')
+    parser.add_argument('--test_feature_address', type=str, default="/kaggle/working/ucsd-p2/featur", help='where did you store your test features?')
     parser.add_argument('--train_feature_address', type=str, default="/kaggle/input/kkkkkkkkk/feature_UCSD2/output", help='where did you store your train features?')
-    parser.add_argument('--test_label_address', type=str, default="/kaggle/input/ucsd-p2/test_labels_new/test_labels_new", help='where did you store your test labels?')
+    parser.add_argument('--test_label_address', type=str, default="/kaggle/working/ucsd-p2/merged_labels", help='where did you store your test labels?')
     parser.add_argument('--train_label_address', type=str, default="/kaggle/input/ucsd-p2/train_labels_new/train_labels_new", help='where did you store your train labels?')
 
-#"/kaggle/input/ucsd-p2/train_labels_new/train_labels_new"
+
     parser.add_argument('--seg_length', type=int, default=32, help='default:32')
     parser.add_argument('--local_con', default='static', help='dynamic/static')
     #for dynamic
