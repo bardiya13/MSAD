@@ -23,7 +23,7 @@ def test(dataloader, model, args, device):
         for i, inputs in tqdm(enumerate(dataloader)):
 
 
-            print(inputs.shape)
+
             input = inputs.to(device)
             if sum(gt[kk:kk+input.shape[1]]) == 0:
                 continue
