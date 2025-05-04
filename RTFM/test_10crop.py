@@ -41,7 +41,7 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ucf':
             gt = np.load('list/gt-ucf.npy')
         if args.dataset == 'msad':
-            gt = np.load('list/gt-MSAD-WS-new.npy')
+            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
             gt = np.load('list/gt-cuhk.npy')
 
