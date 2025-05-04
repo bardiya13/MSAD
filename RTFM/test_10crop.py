@@ -51,7 +51,7 @@ def test(dataloader, model, args, device):
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        print(len(gt_new))
+        print("gt_new_len",len(gt_new))
         gt_new=np.array(gt_new)
 
         fpr, tpr, threshold = roc_curve(list(gt_new), pred)
