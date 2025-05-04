@@ -31,9 +31,9 @@ class Dataset(data.Dataset):
         
         if self.dataset == 'msad':
             if test_mode:
-                self.rgb_list_file = 'list/msad-i3d-test.list'
+                self.rgb_list_file = '/kaggle/working/MSAD/RTFM/list/msad-i3d-test.list'
             else:
-                self.rgb_list_file = 'list/msad-i3d.list'
+                self.rgb_list_file = '/kaggle/working/MSAD/RTFM/list/msad-i3d.list'
 
         if self.dataset == 'cuhk':
             if test_mode:

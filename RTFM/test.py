@@ -33,5 +33,36 @@ if __name__ == '__main__':
     best_AUC = -1
     # output_path = ''   # put your own path here
     auc = test(test_loader, model, args, device)
+    #######################################
+    ######PART CALCUTE ANOMOLY AUC
+
+    # Get predictions and labels from the test loader again for anomaly AUC calculation
+    model.eval()
+    with torch.no_grad():
+        pred = torch.zeros(0, device=device)
+        labels = torch.zeros(0, device=device)
+
+        for i, (data, label) in enumerate(test_loader):
+            inputs = data.to(device)
+            score = model(inputs)
+            pred = torch.cat((pred, score))
+            labels = torch.cat((labels, label.to(device)))
+
+        # Convert to numpy for AUC calculation
+        labels_np = labels.cpu().numpy()
+        pred_np = pred.cpu().numpy()
+
+        # Filter only the abnormal videos (label=1)
+        abnormal_indices = labels_np == 1
+        if abnormal_indices.any():
+            anomaly_pred = pred_np[abnormal_indices]
+            anomaly_labels = labels_np[abnormal_indices]
+            # All labels are 1, so we're measuring how well the model ranks the anomalies
+            anomaly_AUC = roc_auc_score(anomaly_labels, anomaly_pred)
+            print(f"Anomaly_AUC (only on abnormal videos): {anomaly_AUC:.4f}")
+        else:
+            print("No abnormal videos found in the test set")
+
+
 
 
