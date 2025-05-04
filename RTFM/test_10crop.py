@@ -25,9 +25,9 @@ def test(dataloader, model, args, device):
             input = inputs.to(device)
             if sum(gt[kk:kk+inputs.shape[1]]) == 0:
                 continue
-            else:
-                gt_new.append(gt[kk:kk+inputs.shape[1]])
-                kk += input.shape[1]
+
+            gt_new.append(gt[kk:kk+inputs.shape[1]])
+            kk += input.shape[1]
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
