@@ -93,11 +93,18 @@ class Dataset(data.Dataset):
 
     def __getitem__(self, index):
 
-        label = self.get_label()  # get video level label 0/1
-        # features = np.load(self.list[index].strip('\n'), allow_pickle=True)
-        features = np.load(
-            self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
-            allow_pickle=True)
+        label = self.get_label() # get video level label 0/1
+        file_path=self.list[index].strip('\n')
+        if "MSAD-I3D-abnormal-testing" in file_path:
+            features =np.load(file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),allow_pickle=True)
+
+
+        # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
+        else:
+            features = np.load(
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
+
+
         features = np.array(features, dtype=np.float32)
 
         if self.tranform is not None:
