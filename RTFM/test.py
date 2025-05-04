@@ -36,15 +36,41 @@ if __name__ == '__main__':
     #######################################
     ######PART CALCUTE ANOMOLY AUC
 
-    # Get predictions and labels from the test loader again for anomaly AUC calculation
-    test_abnormal = DataLoader(Dataset(args, test_mode=True, is_normal=False),
-                               batch_size=1, shuffle=False,
-                               num_workers=0, pin_memory=False)
-    test_ab_info = {"epoch": [], "test_ab_AUC": []}
-    best_AUC = -1
+    from sklearn.metrics import roc_auc_score
 
-    auc_ab = test(test_abnormal, model, args, device)
-    print("AUC_ABnormal",auc_ab)
+    model.eval()
+    with torch.no_grad():
+        pred = torch.zeros(0, device=device)
+        labels = torch.zeros(0, device=device)
+
+        # Load only abnormal videos
+        test_abnormal = DataLoader(Dataset(args, test_mode=True, is_normal=False),
+                                   batch_size=1, shuffle=False,
+                                   num_workers=0, pin_memory=False)
+
+        for i, (data, label) in enumerate(test_abnormal):
+            inputs = data.to(device)
+            score = model(inputs)
+            pred = torch.cat((pred, score))
+            labels = torch.cat((labels, label.to(device)))
+
+        # Convert to numpy for AUC calculation
+        labels_np = labels.cpu().numpy()
+        pred_np = pred.cpu().numpy()
+
+        # Check if we have any abnormal videos
+        if len(labels_np) > 0:
+            # Calculate AUC on abnormal videos only
+            # Note: If all labels are 1, we might need a different metric
+            # This assumes some variation in the scores/predictions
+            try:
+                abnormal_AUC = roc_auc_score(labels_np, pred_np)
+                print(f"Abnormal AUC (only on abnormal videos): {abnormal_AUC:.4f}")
+            except ValueError as e:
+                print(f"Error calculating AUC: {e}")
+                print("This may happen if all labels are the same.")
+        else:
+            print("No abnormal videos found in the test set")
 
     # model.eval()
     # with torch.no_grad():
