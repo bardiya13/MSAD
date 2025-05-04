@@ -28,6 +28,10 @@ if __name__ == '__main__':
                               batch_size=1, shuffle=False,
                               num_workers=0, pin_memory=False)
 
+    test_abnormal = DataLoader(Dataset(args, test_mode=True,is_normal=False),
+                              batch_size=1, shuffle=False,
+                              num_workers=0, pin_memory=False)
+
     model = Model(args.feature_size, args.batch_size)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
