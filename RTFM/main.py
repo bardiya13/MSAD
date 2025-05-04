@@ -24,13 +24,13 @@ if __name__ == '__main__':
     train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
                                batch_size=args.batch_size, shuffle=True,
                                num_workers=0, pin_memory=False, drop_last=True)
-    test_loader = DataLoader(Dataset(args, test_mode=True),
+    test_loader = DataLoader(Dataset(args, test_mode=True,is_normal=False),
                               batch_size=1, shuffle=False,
                               num_workers=0, pin_memory=False)
 
-    test_abnormal = DataLoader(Dataset(args, test_mode=True,is_normal=False),
-                              batch_size=1, shuffle=False,
-                              num_workers=0, pin_memory=False)
+    # test_abnormal = DataLoader(Dataset(args, test_mode=True,is_normal=False),
+    #                           batch_size=1, shuffle=False,
+    #                           num_workers=0, pin_memory=False)
 
     model = Model(args.feature_size, args.batch_size)
 
@@ -79,4 +79,6 @@ if __name__ == '__main__':
                 torch.save(model.state_dict(), './ckpt/' + args.dataset + '-' + args.feat_extractor +  '{}-{}.pkl'.format(best_AUC, step))
                 save_best_record(test_info, os.path.join(output_path, '{}-step-AUC-{}.txt'.format(step, best_AUC)))
     torch.save(model.state_dict(), './ckpt/' + args.model_name + 'final.pkl')
+
+
 
