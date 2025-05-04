@@ -21,13 +21,14 @@ def test(dataloader, model, args, device):
         kk = 0
         gt_new = []
         for i, inputs in tqdm(enumerate(dataloader)):
-            print(i)
+
+
 
             input = inputs.to(device)
-            if sum(gt[kk:kk+inputs.shape[1]]) == 0:
+            if sum(gt[kk:kk+input.shape[1]]) == 0:
                 continue
 
-            gt_new.append(gt[kk:kk+inputs.shape[1]])
+            gt_new.append(gt[kk:kk+input.shape[1]])
             kk += input.shape[1]
 
 
