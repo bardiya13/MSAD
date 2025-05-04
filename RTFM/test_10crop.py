@@ -111,6 +111,8 @@ def test(dataloader, model, args, device):
 
             pred = list(pred.cpu().detach().numpy())
             pred = np.repeat(np.array(pred), 16)
+            print("listgt",list(gt))
+            print("pred",pred)
 
             fpr, tpr, threshold = roc_curve(list(gt), pred)
             rec_auc = auc(fpr, tpr)
