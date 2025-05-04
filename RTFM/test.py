@@ -37,10 +37,15 @@ if __name__ == '__main__':
     ######PART CALCUTE ANOMOLY AUC
 
     # Get predictions and labels from the test loader again for anomaly AUC calculation
+
     model.eval()
     with torch.no_grad():
         pred = torch.zeros(0, device=device)
         labels = torch.zeros(0, device=device)
+
+        anomaly_test_loader = DataLoader(Dataset(args, test_mode=False),
+                                         batch_size=1, shuffle=False,
+                                         num_workers=0, pin_memory=False)
 
         for i, (data, label) in enumerate(test_loader):
             inputs = data.to(device)
