@@ -96,7 +96,7 @@ class Dataset(data.Dataset):
         label = self.get_label()  # get video level label 0/1
         # features = np.load(self.list[index].strip('\n'), allow_pickle=True)
         features = np.load(
-            self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/'),
+            self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
             allow_pickle=True)
         features = np.array(features, dtype=np.float32)
 
