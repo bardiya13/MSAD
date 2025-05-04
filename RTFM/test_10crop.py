@@ -30,14 +30,14 @@ def test(dataloader, model, args, device):
         #     kk += input.shape[1]
         #     print(i)
 
-            if len(input.size()) == 4:
-                input = input.permute(0, 2, 1, 3)
-            score_abnormal, score_normal, feat_select_abn, feat_select_normal, feat_abn_bottom, feat_select_normal_bottom, logits, scores_nor_bottom, scores_nor_abn_bag, feat_magnitudes = model(input)
-            logits = torch.squeeze(logits, 1)
-            logits = torch.mean(logits, 0)
-            sig = logits
+        if len(input.size()) == 4:
+            input = input.permute(0, 2, 1, 3)
+        score_abnormal, score_normal, feat_select_abn, feat_select_normal, feat_abn_bottom, feat_select_normal_bottom, logits, scores_nor_bottom, scores_nor_abn_bag, feat_magnitudes = model(input)
+        logits = torch.squeeze(logits, 1)
+        logits = torch.mean(logits, 0)
+        sig = logits
             # featurelen.append(len(sig))
-            pred = torch.cat((pred, sig))
+        pred = torch.cat((pred, sig))
 
         # for i, input in enumerate(dataloader):
         #     input = input.to(device)
