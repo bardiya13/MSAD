@@ -13,6 +13,8 @@ def test(dataloader, model, args, device):
             
             # (1, T, 1024)
             input = inputs.to(device)
+            print(input.shape
+                  )
             # print(inputs[0].shape)
             # (B, 10, T, 2048) -> (B, T, 10, 2048)
             if len(input.size()) == 4:
