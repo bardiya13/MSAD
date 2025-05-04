@@ -8,15 +8,27 @@ def test(dataloader, model, args, device):
     with torch.no_grad():
         model.eval()
         pred = torch.zeros(0, device=device)
-
+        if args.dataset == 'shanghai':
+            gt = np.load('list/gt-sh2.npy')
+        if args.dataset == 'ped2':
+            gt = np.load('list/gt-ped2.npy')
+        if args.dataset == 'ucf':
+            gt = np.load('list/gt-ucf.npy')
+        if args.dataset == 'msad':
+            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
+        if args.dataset == 'cuhk':
+            gt = np.load('list/gt-cuhk.npy')
+        kk = 0
+        gt_new = []
         for i, inputs in tqdm(enumerate(dataloader)):
-            
-            # (1, T, 1024)
+
             input = inputs.to(device)
-            print(input.shape
-                  )
-            # print(inputs[0].shape)
-            # (B, 10, T, 2048) -> (B, T, 10, 2048)
+            if sum(gt[kk:kk+inputs.shape[1]]) == 0:
+                continue
+            else:
+                gt_new.append(gt[kk:kk+inputs.shape[1]])
+                kk += input.shape[1]
+
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
             score_abnormal, score_normal, feat_select_abn, feat_select_normal, feat_abn_bottom, feat_select_normal_bottom, logits, scores_nor_bottom, scores_nor_abn_bag, feat_magnitudes = model(input)
@@ -36,25 +48,15 @@ def test(dataloader, model, args, device):
         #     sig = logits
         #     pred = torch.cat((pred, sig))
 
-        if args.dataset == 'shanghai':
-            gt = np.load('list/gt-sh2.npy')
-        if args.dataset == 'ped2':
-            gt = np.load('list/gt-ped2.npy')
-        if args.dataset == 'ucf':
-            gt = np.load('list/gt-ucf.npy')
-        if args.dataset == 'msad':
-            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
-        if args.dataset == 'cuhk':
-            gt = np.load('list/gt-cuhk.npy')
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
 
-        fpr, tpr, threshold = roc_curve(list(gt), pred)
+        fpr, tpr, threshold = roc_curve(list(gt_new), pred)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
 
-        precision, recall, th = precision_recall_curve(list(gt), pred)
+        precision, recall, th = precision_recall_curve(list(gt_new), pred)
         pr_auc = auc(recall, precision)
         # print('pr_auc : ' + str(rec_auc))
         # viz.plot_lines('pr_auc', pr_auc)
