@@ -52,15 +52,15 @@ def test(dataloader, model, args, device):
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        print("gt_new_len",len(gt))
-        gt_new=np.array(gt)
+        print("gt_new_len",len(gt_new))
+        gt_new=np.array(gt_new)
 
-        fpr, tpr, threshold = roc_curve(list(gt), pred)
+        fpr, tpr, threshold = roc_curve(list(gt_new), pred)
 
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
 
-        precision, recall, th = precision_recall_curve(list(gt), pred)
+        precision, recall, th = precision_recall_curve(list(gt_new), pred)
         pr_auc = auc(recall, precision)
         # print('pr_auc : ' + str(rec_auc))
         # viz.plot_lines('pr_auc', pr_auc)
