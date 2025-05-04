@@ -94,7 +94,10 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
 
         label = self.get_label()  # get video level label 0/1
-        features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+        # features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+        features = np.load(
+            self.list[index].strip('\n').replace('/scratch/kf09/lz1278/', '/kaggle/working/drive_folder/'),
+            allow_pickle=True)
         features = np.array(features, dtype=np.float32)
 
         if self.tranform is not None:
