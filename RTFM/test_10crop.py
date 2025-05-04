@@ -20,15 +20,15 @@ def test(dataloader, model, args, device):
             gt = np.load('list/gt-cuhk.npy')
         kk = 0
         gt_new = []
-        for i, inputs in tqdm(enumerate(dataloader)):
-
-            input = inputs.to(device)
-            if sum(gt[kk:kk+inputs.shape[1]]) == 0:
-                continue
-
-            gt_new.append(gt[kk:kk+inputs.shape[1]])
-            kk += input.shape[1]
-            print(i)
+        # for i, inputs in tqdm(enumerate(dataloader)):
+        #
+        #     input = inputs.to(device)
+        #     if sum(gt[kk:kk+inputs.shape[1]]) == 0:
+        #         continue
+        #
+        #     gt_new.append(gt[kk:kk+inputs.shape[1]])
+        #     kk += input.shape[1]
+        #     print(i)
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
@@ -52,15 +52,16 @@ def test(dataloader, model, args, device):
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        print("gt_new_len",len(gt_new))
-        gt_new=np.array(gt_new)
-
-        fpr, tpr, threshold = roc_curve(list(gt_new), pred)
+        print("gt_new_len",len(gt))
+        # gt_new=np.array(gt)
+        print("list_gt",list(gt))
+        print("pred",pred)
+        fpr, tpr, threshold = roc_curve(list(gt), pred)
 
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
 
-        precision, recall, th = precision_recall_curve(list(gt_new), pred)
+        precision, recall, th = precision_recall_curve(list(gt), pred)
         pr_auc = auc(recall, precision)
         # print('pr_auc : ' + str(rec_auc))
         # viz.plot_lines('pr_auc', pr_auc)
