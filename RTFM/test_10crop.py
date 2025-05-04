@@ -52,6 +52,7 @@ def test(dataloader, model, args, device):
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
         gt_new=np.array(gt_new)
+        print('gt_new shape',gt_new.shape)
         fpr, tpr, threshold = roc_curve(list(gt_new), pred)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
