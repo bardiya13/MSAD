@@ -43,9 +43,10 @@ if __name__ == '__main__':
         pred = torch.zeros(0, device=device)
         labels = torch.zeros(0, device=device)
 
-        anomaly_test_loader = DataLoader(Dataset(args, test_mode=False),
+        anomaly_test_loader = DataLoader(Dataset(args, test_mode=True,is_normal=False),
                                          batch_size=1, shuffle=False,
-                                         num_workers=0, pin_memory=False)
+                                         num_workers=0, pin_memory=False,drop_last=True)
+
 
         for i, (data, label) in enumerate(anomaly_test_loader):
             inputs = data.to(device)
