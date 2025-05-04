@@ -28,7 +28,7 @@ def test(dataloader, model, args, device):
             if sum(gt[kk:kk+input.shape[1]]) == 0:
                 continue
 
-            gt_new.append(gt[kk:kk+input.shape[1]])
+            gt_new.append(input.shape[1])
             kk += input.shape[1]
 
 
