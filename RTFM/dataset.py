@@ -100,11 +100,8 @@ class Dataset(data.Dataset):
 
 
         # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
-
-        else:
-            features=features
-
-
+        elif index>=120:
+            continue
 
 
 
