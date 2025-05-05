@@ -180,7 +180,7 @@ def test(dataloader, model, args, device):
         if args.dataset == 'shanghai':
             gt = np.load('list/gt-sh2.npy')
         if args.dataset == 'ped2':
-            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-ped2.npy')
+            gt = np.load('/kaggle/working/concatenated_labels_new.npy')
         if args.dataset == 'ucf':
             gt = np.load('list/gt-ucf.npy')
         if args.dataset == 'msad':
