@@ -100,9 +100,12 @@ class Dataset(data.Dataset):
 
 
         # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
-        elif index>=120:
+        else:
+            features = np.load(
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'),
+                allow_pickle=True)
+#/kaggle/input/msad-normal-test/MSAD-I3D-normal-testing
 
-            pass
 
 
 
