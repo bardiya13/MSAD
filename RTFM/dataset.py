@@ -20,7 +20,7 @@ class Dataset(data.Dataset):
 
         if self.dataset == 'ped2':
             if test_mode:
-                self.rgb_list_file = './list/ped2-i3d-test.list'
+                self.rgb_list_file = '/kaggle/working/test_names.txt'
             else:
                 self.rgb_list_file = './list/ped2-i3d-train.list'
 
