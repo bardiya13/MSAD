@@ -3,6 +3,7 @@ import numpy as np
 from utils import process_feat
 import torch
 from torch.utils.data import DataLoader
+
 torch.set_default_tensor_type('torch.FloatTensor')
 
 
@@ -16,7 +17,7 @@ class Dataset(data.Dataset):
                 self.rgb_list_file = './list/shanghai-i3d-test-10crop.list'
             else:
                 self.rgb_list_file = './list/shanghai-i3d-train-10crop.list'
-        
+
         if self.dataset == 'ped2':
             if test_mode:
                 self.rgb_list_file = './list/ped2-i3d-test.list'
@@ -28,7 +29,7 @@ class Dataset(data.Dataset):
                 self.rgb_list_file = 'list/ucf-i3d-test.list'
             else:
                 self.rgb_list_file = 'list/ucf-i3d.list'
-        
+
         if self.dataset == 'msad':
             if test_mode:
                 self.rgb_list_file = '/kaggle/working/MSAD/RTFM/list/msad-i3d-test.list'
@@ -46,7 +47,6 @@ class Dataset(data.Dataset):
         self._parse_list()
         self.num_frame = 0
         self.labels = None
-
 
     def _parse_list(self):
         self.list = list(open(self.rgb_list_file))
@@ -80,7 +80,7 @@ class Dataset(data.Dataset):
                     self.list = self.list[:120]
                     # print('abnormal list for msad')
                     # print(self.list)
-            
+
             elif self.dataset == 'ped2':
                 if self.is_normal:
                     self.list = self.list[6:]
@@ -93,21 +93,18 @@ class Dataset(data.Dataset):
 
     def __getitem__(self, index):
 
-        label = self.get_label() # get video level label 0/1
-        file_path=self.list[index].strip('\n')
+        label = self.get_label()  # get video level label 0/1
+        file_path = self.list[index].strip('\n')
         if "MSAD-I3D-abnormal-testing" in file_path:
-            features =np.load(file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),allow_pickle=True)
+            features = np.load(
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
+                allow_pickle=True)
 
 
         # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
         else:
             features = np.load(
-                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'),
-                allow_pickle=True)
-#/kaggle/input/msad-normal-test/MSAD-I3D-normal-testing
-
-
-
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
 
         features = np.array(features, dtype=np.float32)
 

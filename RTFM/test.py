@@ -16,14 +16,13 @@ from config import *
 if __name__ == '__main__':
     args = option.parser.parse_args()
     config = Config(args)
-    test_loader = DataLoader(Dataset(args, test_mode=True,is_normal=False),
-                              batch_size=1, shuffle=False,
-                              num_workers=0, pin_memory=False)
+    test_loader = DataLoader(Dataset(args, test_mode=True, is_normal=False),
+                             batch_size=1, shuffle=False,
+                             num_workers=0, pin_memory=False)
 
-    
     checkpoint = torch.load(args.testing_model)
 
-    model = Model(args.feature_size, args.batch_size)  
+    model = Model(args.feature_size, args.batch_size)
     model.load_state_dict(checkpoint)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
