@@ -141,6 +141,7 @@ def test(dataloader, model, args, device):
     with torch.no_grad():
         model.eval()
         pred = torch.zeros(0, device=device)
+        shape_sum=0
 
         for i, inputs in tqdm(enumerate(dataloader)):
 
@@ -148,9 +149,16 @@ def test(dataloader, model, args, device):
             input = inputs.to(device)
             # print(inputs[0].shape)
             # (B, 10, T, 2048) -> (B, T, 10, 2048)
+
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-                print(input.shape)
+            if i < 120:
+                shape_sum += input.shape[2]
+                if i == 119:
+                    print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
+
+
+
             score_abnormal, score_normal, feat_select_abn, feat_select_normal, feat_abn_bottom, feat_select_normal_bottom, logits, scores_nor_bottom, scores_nor_abn_bag, feat_magnitudes = model(
                 input)
             logits = torch.squeeze(logits, 1)
