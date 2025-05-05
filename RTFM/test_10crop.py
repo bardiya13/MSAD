@@ -152,10 +152,10 @@ def test(dataloader, model, args, device):
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-            if i < 120:
+            if i < 6:
                 shape_sum += input.shape[2]
-                if i == 119:
-                    print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
+                if i == 5:
+                    print(f"Sum of first 6 input.shape[2] values: {shape_sum}")
 
 
 
@@ -180,11 +180,11 @@ def test(dataloader, model, args, device):
         if args.dataset == 'shanghai':
             gt = np.load('list/gt-sh2.npy')
         if args.dataset == 'ped2':
-            gt = np.load('list/gt-ped2.npy')
+            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-ped2.npy')
         if args.dataset == 'ucf':
             gt = np.load('list/gt-ucf.npy')
         if args.dataset == 'msad':
-            gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
+            gt = np.load('/kaggle/input/ooooooo/ground_truth_merged_P2.npy')
         if args.dataset == 'cuhk':
             gt = np.load('list/gt-cuhk.npy')
 
