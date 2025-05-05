@@ -20,7 +20,7 @@ class Dataset(data.Dataset):
 
         if self.dataset == 'ped2':
             if test_mode:
-                self.rgb_list_file = '/kaggle/working/test_names.txt'
+                self.rgb_list_file = './list/ped2-i3d-test.list'
             else:
                 self.rgb_list_file = './list/ped2-i3d-train.list'
 
@@ -95,17 +95,17 @@ class Dataset(data.Dataset):
 
         label = self.get_label()  # get video level label 0/1
         file_path = self.list[index].strip('\n')
-        file_path='/kaggle/input/jijijijijij/train_feature_UCSD2/output_train/'+file_path+".npy"
-        # features = np.load(
-        #     file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
-        #     allow_pickle=True)
-        #
-        #
-        # # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
-        # else:
-        #     features = np.load(
-        #         file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
-        features=np.load(file_path,allow_pickle=True)
+        if "MSAD-I3D-abnormal-testing" in file_path:
+            features = np.load(
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
+                allow_pickle=True)
+
+
+        # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
+        else:
+            features = np.load(
+                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
+
         features = np.array(features, dtype=np.float32)
 
         if self.tranform is not None:
