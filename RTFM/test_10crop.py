@@ -152,9 +152,9 @@ def test(dataloader, model, args, device):
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-            if i < 120:
+            if i < 240:
                 shape_sum += input.shape[2]
-                if i == 119:
+                if i == 239:
                     print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
 
 
