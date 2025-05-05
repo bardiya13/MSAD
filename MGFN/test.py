@@ -81,12 +81,17 @@ def test(dataloader, model, args, device):
         model.eval()
         pred = torch.zeros(0)
         featurelen = []
+        shape_sum=0
         for i, inputs in tqdm(enumerate(dataloader)):
 
             input = inputs[0].to(device)
             # print(inputs[0].shape)
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
+                if i < 120:
+                    shape_sum += input.shape[2]
+                    if i == 119:
+                        print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
             _, _, _, _, logits = model(input)
             logits = torch.squeeze(logits, 1)
             logits = torch.mean(logits, 0)
@@ -97,6 +102,8 @@ def test(dataloader, model, args, device):
         gt = np.load(args.gt, allow_pickle=True)
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
+        np.save('/kaggle/working/predictions.npy', pred)
+        np.save('/kaggle/working/ground_truth.npy', gt)
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
         precision, recall, th = precision_recall_curve(list(gt), pred)
