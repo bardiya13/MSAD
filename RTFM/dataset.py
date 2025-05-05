@@ -95,7 +95,7 @@ class Dataset(data.Dataset):
 
         label = self.get_label()  # get video level label 0/1
         file_path = self.list[index].strip('\n')
-        file_path='/kaggle/input/jijijijijij/train_feature_UCSD2/output_train'+file_path+".npy"
+        file_path='/kaggle/input/jijijijijij/train_feature_UCSD2/output_train/'+file_path+".npy"
         # features = np.load(
         #     file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
         #     allow_pickle=True)
