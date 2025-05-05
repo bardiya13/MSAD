@@ -329,7 +329,17 @@ class Dataset(data.Dataset):
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'MSAD' or args.datasetname == 'CUHK':
-            features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+            file_path = self.list[index].strip('\n')
+            if "MSAD-I3D-abnormal-testing" in file_path:
+                features = np.load(
+                    file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
+                    allow_pickle=True)
+
+
+            # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
+            else:
+                features = np.load(
+                    file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
