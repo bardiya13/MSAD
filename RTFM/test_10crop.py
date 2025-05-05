@@ -150,6 +150,7 @@ def test(dataloader, model, args, device):
             # (B, 10, T, 2048) -> (B, T, 10, 2048)
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
+                print(input.shape)
             score_abnormal, score_normal, feat_select_abn, feat_select_normal, feat_abn_bottom, feat_select_normal_bottom, logits, scores_nor_bottom, scores_nor_abn_bag, feat_magnitudes = model(
                 input)
             logits = torch.squeeze(logits, 1)
