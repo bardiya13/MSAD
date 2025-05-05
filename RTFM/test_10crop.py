@@ -189,7 +189,7 @@ def test(dataloader, model, args, device):
             gt = np.load('list/gt-cuhk.npy')
 
         pred = list(pred.cpu().detach().numpy())
-        pred = np.repeat(np.array(pred), 16)
+        pred = np.repeat(np.array(pred), 17)
 
         np.save('/kaggle/working/predictions.npy', pred)
         np.save('/kaggle/working/ground_truth.npy', gt)
