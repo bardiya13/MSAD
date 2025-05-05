@@ -190,6 +190,7 @@ def test(dataloader, model, args, device):
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
+        gt=gt[:2912]
         np.save('/kaggle/working/predictions.npy', pred)
         np.save('/kaggle/working/ground_truth.npy', gt)
         fpr, tpr, threshold = roc_curve(list(gt), pred)
