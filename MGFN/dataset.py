@@ -344,7 +344,14 @@ class Dataset(data.Dataset):
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
         elif args.datasetname == 'Ped2':
-            features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+
+            features = np.load(
+                self.list[index].strip('\n').replace('/scratch/kf09/lz1278/TEVAD/save/UCSDped2/ped2_ten_crop_i3d/', '/kaggle/working/featur_zip_all_in TEST_p2/'),
+                allow_pickle=True)
+#/kaggle/working/featur_zip_all_in TEST_p2
+#/kaggle/input/ooooooo/featur_zip_all_in TEST_p2
+#/scratch/kf09/lz1278/TEVAD/save/UCSDped2/ped2_ten_crop_i3d/Test003_i3d.npy
+
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
 
