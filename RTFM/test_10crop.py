@@ -182,12 +182,13 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ped2':
             gt = np.load('list/gt-ped2.npy')
         if args.dataset == 'ucf':
-            gt = np.load('/kaggle/working/gt_test_n.npy')
+            gt = np.load('/kaggle/working/concatenated_output.npy')
         if args.dataset == 'msad':
             gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
             gt = np.load('/kaggle/working/concatenated_output_test.npy')
 
+        gt=gt[:83424]
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
         np.save('/kaggle/working/predictions_1.npy', pred)
