@@ -152,10 +152,10 @@ def test(dataloader, model, args, device):
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-            if i < 190:
-                shape_sum += input.shape[2]
-                if i == 189:
-                    print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
+            # if i < 190:
+            #     shape_sum += input.shape[2]
+            #     if i == 189:
+            #         print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
 
 
 
@@ -182,7 +182,7 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ped2':
             gt = np.load('list/gt-ped2.npy')
         if args.dataset == 'ucf':
-            gt = np.load('/kaggle/working/concatenated_output_test.npy')
+            gt = np.load('/kaggle/working/gt_test.npy')
         if args.dataset == 'msad':
             gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
@@ -190,8 +190,8 @@ def test(dataloader, model, args, device):
 
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        np.save('/kaggle/working/predictions.npy', pred)
-        np.save('/kaggle/working/ground_truth.npy', gt)
+        # np.save('/kaggle/working/predictions.npy', pred)
+        # np.save('/kaggle/working/ground_truth.npy', gt)
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))

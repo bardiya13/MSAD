@@ -6,7 +6,7 @@ parser.add_argument('--feature-size', type=int, default=2048, help='size of feat
 parser.add_argument('--modality', default='RGB', help='the type of the input, RGB,AUDIO, or MIX')
 parser.add_argument('--rgb-list', default='/kaggle/working/rgb_list_n.txt', help='list of rgb features ')
 parser.add_argument('--test-rgb-list', default='/kaggle/working/rgb_test_list_n.txt', help='list of test rgb features ')
-parser.add_argument('--gt', default='/kaggle/working/concatenated_output.npy', help='file of ground truth ')
+parser.add_argument('--gt', default='/kaggle/working/gt_test.npy', help='file of ground truth ')
 parser.add_argument('--gpus', default=1, type=int, choices=[0], help='gpus')
 parser.add_argument('--lr', type=str, default='[0.001]*15000', help='learning rates for steps(list form)')
 parser.add_argument('--batch-size', type=int, default=2, help='number of instances in a batch of data (default: 16)')
