@@ -28,7 +28,7 @@ class Dataset(data.Dataset):
             if test_mode:
                 self.rgb_list_file = '/kaggle/working/rgb_test_list_n.txt'
             else:
-                self.rgb_list_file = '/kaggle/working/rgb_list_n.txt'
+                self.rgb_list_file = '/kaggle/working/rgb_list_n_with_mp4.txt'
 
         if self.dataset == 'msad':
             if test_mode:
