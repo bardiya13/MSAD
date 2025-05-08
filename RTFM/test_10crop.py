@@ -182,7 +182,7 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ped2':
             gt = np.load('list/gt-ped2.npy')
         if args.dataset == 'ucf':
-            gt = np.load('/kaggle/working/gt_test.npy')
+            gt = np.load('/kaggle/working/gt_test_n.npy')
         if args.dataset == 'msad':
             gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
