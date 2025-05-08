@@ -99,7 +99,7 @@ class Dataset(data.Dataset):
             file_path="/kaggle/input/tad-train-feauter/I3D_Feature_Extraction_resnet/output"+file_path
         else:
             file_path = "/kaggle/input/tad-feauter-test-1/output_folder" + file_path
-        features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+        features = np.load(file_path, allow_pickle=True)
         features = np.array(features, dtype=np.float32)
         if self.tranform is not None:
             features = self.tranform(features)
