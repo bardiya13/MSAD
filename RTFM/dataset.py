@@ -99,7 +99,9 @@ class Dataset(data.Dataset):
         if self.test_mode is False:
             file_path="/kaggle/input/tad-train-feauter/I3D_Feature_Extraction_resnet/output/"+file_path+".npy"
         else:
-            file_path = "/kaggle/input/tad-feauter-test-1/output_folder/" + file_path
+            if 'Normal' in file_path:
+                file_path="/kaggle/input/tad-feauter-test-1/output_folder/" + file_path+".mp4.npy"
+            file_path = "/kaggle/input/tad-feauter-test-1/output_folder/" + file_path+".npy"
         features = np.load(file_path, allow_pickle=True)
         features = np.array(features, dtype=np.float32)
         if self.tranform is not None:
