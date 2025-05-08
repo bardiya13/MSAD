@@ -63,11 +63,11 @@ class Dataset(data.Dataset):
 
             elif self.dataset == 'ucf':
                 if self.is_normal:
-                    self.list = self.list[59:]
+                    self.list = self.list[189:]
                     # print('normal list for ucf')
                     # print(self.list)
                 else:
-                    self.list = self.list[:59]
+                    self.list = self.list[:189]
                     # print('abnormal list for ucf')
                     # print(self.list)
 
@@ -94,9 +94,9 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
 
         label = self.get_label()  # get video level label 0/1
-        file_path = self.list[index].strip('\n')
+        file_path = (self.list[index].strip('\n'))+".npy"
+        if self.test_mode is False:
         features=np.load(file_path,allow_pickle=True)
-
         features = np.array(features, dtype=np.float32)
 
         if self.tranform is not None:
