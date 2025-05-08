@@ -26,9 +26,9 @@ class Dataset(data.Dataset):
 
         if self.dataset == 'ucf':
             if test_mode:
-                self.rgb_list_file = 'list/ucf-i3d-test.list'
+                self.rgb_list_file = '/kaggle/working/rgb_test_list_n.txt'
             else:
-                self.rgb_list_file = 'list/ucf-i3d.list'
+                self.rgb_list_file = '/kaggle/working/rgb_list_n.txt'
 
         if self.dataset == 'msad':
             if test_mode:
@@ -96,7 +96,6 @@ class Dataset(data.Dataset):
         label = self.get_label()  # get video level label 0/1
         file_path = self.list[index].strip('\n')
         features=np.load(file_path,allow_pickle=True)
-
 
         features = np.array(features, dtype=np.float32)
 
