@@ -94,7 +94,7 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
 
         label = self.get_label()  # get video level label 0/1
-        file_path = (self.list[index].strip('\n'))+".npy"
+        file_path = (self.list[index].strip('\n'))+".mp4.npy"
 
         if self.test_mode is False:
             file_path="/kaggle/input/tad-train-feauter/I3D_Feature_Extraction_resnet/output/"+file_path
