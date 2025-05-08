@@ -63,11 +63,11 @@ class Dataset(data.Dataset):
 
             elif self.dataset == 'ucf':
                 if self.is_normal:
-                    self.list = self.list[810:]
+                    self.list = self.list[59:]
                     # print('normal list for ucf')
                     # print(self.list)
                 else:
-                    self.list = self.list[:810]
+                    self.list = self.list[:59]
                     # print('abnormal list for ucf')
                     # print(self.list)
 
@@ -95,16 +95,8 @@ class Dataset(data.Dataset):
 
         label = self.get_label()  # get video level label 0/1
         file_path = self.list[index].strip('\n')
-        if "MSAD-I3D-abnormal-testing" in file_path:
-            features = np.load(
-                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/abnrmal-msad-test/'),
-                allow_pickle=True)
+        features=np.load(file_path,allow_pickle=True)
 
-
-        # features = self.list[index].strip('\n').replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/')
-        else:
-            features = np.load(
-                file_path.replace('/scratch/kf09/lz1278/MSAD-I3D-WS/', '/kaggle/input/msad-normal-test/'))
 
         features = np.array(features, dtype=np.float32)
 
