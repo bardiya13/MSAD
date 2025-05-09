@@ -188,7 +188,7 @@ def test(dataloader, model, args, device):
         if args.dataset == 'cuhk':
             gt = np.load('/kaggle/working/concatenated_output_test.npy')
 
-        gt=gt[:83424]
+        # gt=gt[:83424]
         gt = np.array([1 if x > 0 else 0 for x in gt])
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
