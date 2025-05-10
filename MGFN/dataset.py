@@ -279,11 +279,11 @@ class Dataset(data.Dataset):
         if self.test_mode is False:
             if args.datasetname == 'UCF':
                 if self.is_normal:
-                    self.list = self.list[59:]  # ucf 810; sht63; xd 9525
+                    self.list = self.list[180:]  # ucf 810; sht63; xd 9525
                     # print('normal list')
                     # print(self.list)
                 else:
-                    self.list = self.list[:59]  # ucf 810; sht 63; 9525
+                    self.list = self.list[:180]  # ucf 810; sht 63; 9525
                     # print('abnormal list')
                     # print(self.list)
 
@@ -318,9 +318,30 @@ class Dataset(data.Dataset):
                     # print(self.list)
 
     def __getitem__(self, index):
-        label = self.get_label(index)  # get video level label 0/1
+        label = self.get_label(index)
+
+        file_path = (self.list[index].strip('\n'))
+
+        if self.test_mode is False:
+            file_path = "/kaggle/input/tad-train-feauter/feauter_train/" + file_path
+        else:
+
+            file_path = "/kaggle/input/tad-feauter-test-1/output_folder/" + file_path
+        features = np.load(file_path, allow_pickle=True)
+        features = np.array(features, dtype=np.float32)
+
+
+
+
+
+        # get video level label 0/1
         if args.datasetname == 'UCF':
-            features = np.load(self.list[index].strip('\n'), allow_pickle=True)
+            if self.test_mode is False:
+                file_path = "/kaggle/input/tad-train-feauter/feauter_train/" + file_path
+            else:
+
+                file_path = "/kaggle/input/tad-feauter-test-1/output_folder/" + file_path
+            features = np.load(file_path, allow_pickle=True)
             features = np.array(features, dtype=np.float32)
             name = self.list[index].split('/')[-1].strip('\n')[:-4]
         elif args.datasetname == 'XD':

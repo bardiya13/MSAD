@@ -152,7 +152,7 @@ def test(dataloader, model, args, device):
 
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-                print(input.shape[2])
+
             # if i < 190:
             #     shape_sum += input.shape[2]
             #     if i == 189:
@@ -193,8 +193,10 @@ def test(dataloader, model, args, device):
         # gt = np.array([1 if x > 0 else 0 for x in gt])
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        np.save('/kaggle/working/predictions_1.npy', pred)
-        np.save('/kaggle/working/ground_truth_1.npy', gt)
+
+        np.save('/kaggle/working/predictions_2.npy', pred)
+        np.save('/kaggle/working/ground_truth_2.npy', gt)
+
         gt=gt[:len(pred)]
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
