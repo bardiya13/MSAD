@@ -44,7 +44,7 @@ def process_feat(feat, length):
              new_feat[i,:] = feat[r[i],:]
     return new_feat
 
-
+#########
 def minmax_norm(act_map, min_val=None, max_val=None):
     if min_val is None or max_val is None:
         relu = torch.nn.ReLU()
