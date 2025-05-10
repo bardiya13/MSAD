@@ -320,19 +320,6 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
         label = self.get_label(index)
 
-        file_path = (self.list[index].strip('\n'))
-
-        if self.test_mode is False:
-            file_path = "/kaggle/input/tad-train-feauter/feauter_train/" + file_path
-        else:
-
-            file_path = "/kaggle/input/tad-feauter-test-1/output_folder/" + file_path
-        features = np.load(file_path, allow_pickle=True)
-        features = np.array(features, dtype=np.float32)
-
-
-
-
 
         # get video level label 0/1
         if args.datasetname == 'UCF':
