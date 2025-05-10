@@ -321,8 +321,15 @@ class Dataset(data.Dataset):
         label = self.get_label(index)
 
 
+
+
+
+
+
+
         # get video level label 0/1
         if args.datasetname == 'UCF':
+            file_path = (self.list[index].strip('\n'))
             if self.test_mode is False:
                 file_path = "/kaggle/input/tad-train-feauter/feauter_train/" + file_path
             else:
