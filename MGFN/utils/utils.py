@@ -38,7 +38,10 @@ def process_feat(feat, length):
         if r[i]!=r[i+1]:
             new_feat[i,:] = np.mean(feat[r[i]:r[i+1],:], 0)
         else:
-            new_feat[i,:] = feat[r[i],:]
+            if isinstance(r[i], np.ndarray):
+                new_feat[i, :] = feat[int(r[i][0]), :]
+            else:
+             new_feat[i,:] = feat[r[i],:]
     return new_feat
 
 
