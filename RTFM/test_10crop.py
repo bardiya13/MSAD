@@ -182,18 +182,18 @@ def test(dataloader, model, args, device):
         if args.dataset == 'ped2':
             gt = np.load('list/gt-ped2.npy')
         if args.dataset == 'ucf':
-            gt = np.load('/kaggle/working/concatenated_output.npy')
+            gt = np.load('/kaggle/working/gt_test_1.npy')
         if args.dataset == 'msad':
             gt = np.load('/kaggle/working/MSAD/RTFM/list/gt-MSAD-WS-new.npy')
         if args.dataset == 'cuhk':
             gt = np.load('/kaggle/working/concatenated_output_test.npy')
 
         # gt=gt[:83424]
-        gt = np.array([1 if x > 0 else 0 for x in gt])
+        # gt = np.array([1 if x > 0 else 0 for x in gt])
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        np.save('/kaggle/working/predictions_1.npy', pred)
-        np.save('/kaggle/working/ground_truth_1.npy', gt)
+        # np.save('/kaggle/working/predictions_1.npy', pred)
+        # np.save('/kaggle/working/ground_truth_1.npy', gt)
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))

@@ -26,9 +26,9 @@ class Dataset(data.Dataset):
 
         if self.dataset == 'ucf':
             if test_mode:
-                self.rgb_list_file = '/kaggle/working/rgb_test_list_n.txt'
+                self.rgb_list_file = '/kaggle/working/rgb_test_list.txt'
             else:
-                self.rgb_list_file = '/kaggle/working/rgb_list_n_with_mp4.txt'
+                self.rgb_list_file = '/kaggle/working/rgb_list.txt'
 
         if self.dataset == 'msad':
             if test_mode:
@@ -63,11 +63,11 @@ class Dataset(data.Dataset):
 
             elif self.dataset == 'ucf':
                 if self.is_normal:
-                    self.list = self.list[189:]
+                    self.list = self.list[180:]
                     # print('normal list for ucf')
                     # print(self.list)
                 else:
-                    self.list = self.list[:189]
+                    self.list = self.list[:180]
                     # print('abnormal list for ucf')
                     # print(self.list)
 
@@ -94,7 +94,7 @@ class Dataset(data.Dataset):
     def __getitem__(self, index):
 
         label = self.get_label()  # get video level label 0/1
-        file_path = (self.list[index].strip('\n'))+".npy"
+        file_path = (self.list[index].strip('\n'))
 
         if self.test_mode is False:
             file_path="/kaggle/input/tad-train-feauter/feauter_train/"+file_path
