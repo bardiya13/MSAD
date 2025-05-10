@@ -194,6 +194,7 @@ def test(dataloader, model, args, device):
         pred = np.repeat(np.array(pred), 16)
         # np.save('/kaggle/working/predictions_1.npy', pred)
         # np.save('/kaggle/working/ground_truth_1.npy', gt)
+        gt=gt[:len(pred)]
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
         print('auc : ' + str(rec_auc))
