@@ -109,8 +109,8 @@ class Dataset(data.Dataset):
                 # features = np.concatenate((features,mag),axis = 2)
 
                 # ------------ Swin ------------
-                mag = np.linalg.norm(features, axis=1)[:, np.newaxis]
-                features = np.concatenate((features, mag), axis=1)
+                mag = np.linalg.norm(features, axis=2)[:, np.newaxis]
+                features = np.concatenate((features, mag), axis=2)
 
             elif args.datasetname == 'MSAD' or args.datasetname == 'CUHK':
                 # ------------ I3D --------------
