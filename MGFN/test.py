@@ -88,9 +88,9 @@ def test(dataloader, model, args, device):
             # print(inputs[0].shape)
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-                if i < 180:
+                if i < 61:
                     shape_sum += input.shape[2]
-                    if i == 180:
+                    if i == 60:
                         print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
 
             _, _, _, _, logits = model(input)
