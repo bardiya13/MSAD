@@ -136,26 +136,26 @@ class Dataset(data.Dataset):
                 if self.is_preprocessed:
                     return features, label
                 # ------------------------ for I3D ------------------------------
-                # features = features.transpose(1, 0, 2)  # [10, T, F]
-                # divided_features = []
+                features = features.transpose(1, 0, 2)  # [10, T, F]
+                divided_features = []
 
-                # divided_mag = []
-                # for feature in features:
-                #     feature = process_feat(feature, args.seg_length) #ucf(32,2048)
-                #     divided_features.append(feature)
-                #     divided_mag.append(np.linalg.norm(feature, axis=1)[:, np.newaxis])
-                # divided_features = np.array(divided_features, dtype=np.float32)
-                # divided_mag = np.array(divided_mag, dtype=np.float32)
-                # divided_features = np.concatenate((divided_features,divided_mag),axis = 2)
-                # return divided_features, label
+                divided_mag = []
+                for feature in features:
+                    feature = process_feat(feature, args.seg_length) #ucf(32,2048)
+                    divided_features.append(feature)
+                    divided_mag.append(np.linalg.norm(feature, axis=1)[:, np.newaxis])
+                divided_features = np.array(divided_features, dtype=np.float32)
+                divided_mag = np.array(divided_mag, dtype=np.float32)
+                divided_features = np.concatenate((divided_features,divided_mag),axis = 2)
+                return divided_features, label
 
                 # ------------------------ for Swin --------------------------------
 
-                feature = process_feat(features, 32)
-                # if args.add_mag_info == True:
-                feature_mag = np.linalg.norm(feature, axis=1)[:, np.newaxis]
-                feature = np.concatenate((feature, feature_mag), axis=1)
-                return feature, label
+                # feature = process_feat(features, 32)
+                # # if args.add_mag_info == True:
+                # feature_mag = np.linalg.norm(feature, axis=1)[:, np.newaxis]
+                # feature = np.concatenate((feature, feature_mag), axis=1)
+                # return feature, label
 
             if args.datasetname == 'MSAD':
                 if self.is_preprocessed:
