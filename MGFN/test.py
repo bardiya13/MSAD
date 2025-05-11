@@ -88,7 +88,11 @@ def test(dataloader, model, args, device):
             # print(inputs[0].shape)
             if len(input.size()) == 4:
                 input = input.permute(0, 2, 1, 3)
-                print(input.shape[2])
+                if i < 180:
+                    shape_sum += input.shape[2]
+                    if i == 180:
+                        print(f"Sum of first 120 input.shape[2] values: {shape_sum}")
+
             _, _, _, _, logits = model(input)
             logits = torch.squeeze(logits, 1)
             logits = torch.mean(logits, 0)
@@ -99,8 +103,8 @@ def test(dataloader, model, args, device):
         gt = np.load(args.gt, allow_pickle=True)
         pred = list(pred.cpu().detach().numpy())
         pred = np.repeat(np.array(pred), 16)
-        # np.save('/kaggle/working/predictions.npy', pred)
-        # np.save('/kaggle/working/ground_truth.npy', gt)
+        np.save('/kaggle/working/predictions.npy', pred)
+        np.save('/kaggle/working/ground_truth.npy', gt)
         gt = gt[:len(pred)]
         fpr, tpr, threshold = roc_curve(list(gt), pred)
         rec_auc = auc(fpr, tpr)
