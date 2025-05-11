@@ -38,25 +38,10 @@ def process_feat(feat, length):
         if r[i]!=r[i+1]:
             new_feat[i,:] = np.mean(feat[r[i]:r[i+1],:], 0)
         else:
-             new_feat[i,:] = feat[r[i],:]
+            new_feat[i,:] = feat[r[i],:]
     return new_feat
-# def process_feat(feat, length):
-#     new_feat = np.zeros((length, feat.shape[1])).astype(np.float32) #UCF(32,2048)
-#     r = np.linspace(0, len(feat), length+1, dtype=int) #(33,)
-#     for i in range(length):
-#         if r[i]!=r[i+1]:
-#             new_feat[i,:] = np.mean(feat[r[i]:r[i+1],:], 0)
-#         else:
-#             # If r[i] is an integer index, use it directly
-#             if np.isscalar(r[i]):
-#                 new_feat[i,:] = feat[r[i],:]
-#             else:
-#                 # If r[i] is returning a slice or array, take the first element
-#                 idx = r[i] if np.isscalar(r[i]) else r[i][0]
-#                 new_feat[i,:] = feat[idx,:]
-#     return new_feat
 
-#########
+
 def minmax_norm(act_map, min_val=None, max_val=None):
     if min_val is None or max_val is None:
         relu = torch.nn.ReLU()
@@ -193,4 +178,3 @@ class GLANCE(nn.Module):
         out = self.to_out(out)
 
         return out.view(*shape)
-
